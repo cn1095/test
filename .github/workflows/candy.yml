@@ -1,0 +1,82 @@
+name: A编译candy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - TARGET: aarch64-linux-musl
+            OPENSSL_TARGET: linux-aarch64
+          - TARGET: armv7l-linux-musleabihf
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: armv7m-linux-musleabi
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: arm-linux-musleabi
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: arm-linux-musleabihf
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: mipsel-linux-muslsf
+            OPENSSL_TARGET: linux-mips32
+          - TARGET: mips-linux-muslsf
+            OPENSSL_TARGET: linux-mips32
+          - TARGET: i686-linux-musl
+            OPENSSL_TARGET: linux-generic32
+          - TARGET: x86_64-linux-musl
+            OPENSSL_TARGET: linux-x86_64
+    runs-on: ubuntu-latest
+    env:
+      OPENSSL_TARGET: ${{ matrix.OPENSSL_TARGET }}
+      TARGET: ${{ matrix.TARGET }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: lanthora/candy
+          ref: master  #默认使用master分支
+      - name: Install UPX
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          version: latest
+          install-only: true
+      - name: 下载编译工具链
+        run: |
+          mkdir -p /opt/musl_gcc 
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          wget -q -c https://musl.cc/${{ env.TARGET }}-cross.tgz -P /opt/musl_gcc/
+          tar zxf /opt/musl_gcc/${{ env.TARGET }}-cross.tgz -C /opt/musl_gcc/
+      - name: 编译candy
+        run: |
+          echo "##########################编译candy二进制#################################"
+          export PATH=/opt/musl_gcc/${{ env.TARGET }}-cross/bin:$PATH
+          export CC=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-gcc
+          export CXX=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-g++
+          export AR=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ar
+          export LD=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ld
+          export RANLIB=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ranlib
+          export STRIP=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-strip
+          export CFLAGS="-I /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/include -L /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/lib"
+          export LDFLAGS="-static $CFLAGS"
+
+          cmake -DCANDY_STATIC=1 -DOPENSSL_TARGET=$OPENSSL_TARGET -DCMAKE_BUILD_TYPE=Release .
+          make -j$(nproc)
+          ls ./src/main
+          file ./src/main/candy
+          mkdir -p /opt/bin
+          cp -rf ./candy.cfg /opt/bin/candy.cfg
+          cp -rf ./src/main/candy /opt/bin/candy
+          $STRIP /opt/bin/candy
+          cd /opt/bin
+          file ./candy
+          cp -rf candy candy_upx
+          upx --lzma --best candy_upx
+          #tar -czvf candy-${{ env.TARGET }}.tar.gz candy candy_upx candy.cfg
+      - name: 上传
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: candy-${{ env.TARGET }}
+          path: /opt/bin/*
