@@ -61,7 +61,7 @@ jobs:
           export CFLAGS="-I /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/include -L /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/lib"
           export LDFLAGS="-static $CFLAGS"
 
-          cmake -DCANDY_STATIC=1 -DOPENSSL_TARGET=$OPENSSL_TARGET -DCMAKE_BUILD_TYPE=Release .
+          cmake -DCANDY_STATIC=1 -DTARGET_OPENSSL=$TARGET_OPENSSL -DCMAKE_BUILD_TYPE=Release .
           make -j$(nproc)
           ls ./src/main
           file ./src/main/candy
