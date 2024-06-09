@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: lanthora/candy
-          ref: $BRANCH  #默认使用master分支
+          ref: ${{ env.BRANCH }} #默认使用master分支
       - name: Install UPX
         uses: crazy-max/ghaction-upx@v3
         with:
