@@ -1,4 +1,4 @@
-name: 编译预发布版本vnt-cli
+name: 编译自定义模块的vnt-cli
 
 on:
   workflow_dispatch:
