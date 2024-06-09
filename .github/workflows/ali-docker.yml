@@ -29,13 +29,9 @@ jobs:
     - name: Build and push image Aliyun
       run: |
           docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
+          echo "pull $IMAGE_NAME"
           docker pull $IMAGE_NAME
-          if [[ $IMAGE_NAME == *"/"* ]]; then
-             IMAGE_NAME="${IMAGE_NAME#*/}" 
-          fi
-          if [[ $IMAGE_NAME != *":"* ]]; then
-             IMAGE_NAME="${IMAGE_NAME}:latest" 
-          fi
+          IMAGE_NAME=$(echo $IMAGE_NAME | awk -F'/' '{print $NF}')
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$IMAGE_NAME"
           echo "docker tag $IMAGE_NAME"
           docker tag $IMAGE_NAME $new_image
