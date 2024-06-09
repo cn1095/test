@@ -133,7 +133,7 @@ jobs:
             [target.i686-unknown-linux-musl]
             rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
             EOF
-      - name: 添加编译平台
+      - name: 添加$TARGET编译平台
         run: rustup target add $TARGET
       - name: 开始编译
         run: |
