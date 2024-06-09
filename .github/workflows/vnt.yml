@@ -95,7 +95,7 @@ jobs:
             if [[ $target != i686 ]] && [[ $target != x86_64 ]] ; then
               echo "MUSL_URI=${MUSL_URI}" >> $GITHUB_ENV
               mkdir -p /opt/musl_gcc 
-              wget -c https://musl.cc/$MUSL_URI.tgz -P /opt/musl_gcc/
+              wget -q -c https://musl.cc/$MUSL_URI.tgz -P /opt/musl_gcc/
               tar zxf /opt/musl_gcc/$MUSL_URI.tgz -C /opt/musl_gcc/
               sudo ln -s /opt/musl_gcc/$MUSL_URI/bin/*gcc /usr/bin/
             else
@@ -135,8 +135,8 @@ jobs:
         run: |
           git clone -b ${{ env.branch }} https://github.com/lbl8603/vnt /opt/vnt
           cd /opt/vnt
-          [[ -n $feature ]] && echo "FEATURES=--features ${feature}" && FEATURES="--features ${feature}"
-          cargo build --package vnt-cli --release --target $TARGET --no-default-features $FEATURES
+          [[ -n $feature ]] && echo "当前${TARGET}架构添加的模块有 ${feature}" && FEATURES="--features ${feature}"
+          cargo build --package vnt-cli --release --target $TARGET -Z build-std=std,panic_abort --no-default-features $FEATURES
           mkdir -p /opt/bin
           mv /opt/vnt/target/${TARGET}/release/vnt-cli /opt/bin/vnt-cli
       - name: Install UPX
@@ -148,7 +148,9 @@ jobs:
         if: github.event.inputs.upx == 'true'
         run: |
           cd /opt/bin
+          ls -alh vnt-cli
           upx --lzma --best vnt-cli
+          ls -alh vnt-cli
       - name: 上传
         uses: actions/upload-artifact@v4
         if: always()
