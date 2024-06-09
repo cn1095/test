@@ -90,7 +90,7 @@ jobs:
         if: github.event.inputs.strip == 'true'
         run: |
           cd /opt/bin
-          $STRIP /opt/bin/candy
+          /opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-strip /opt/bin/candy
           file ./candy
           ls -alh /opt/bin/candy
       - name: 压缩candy
