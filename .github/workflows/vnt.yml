@@ -10,7 +10,7 @@ on:
       target:
         description: '请选择目标CPU架构'
         required: true
-        type: string
+        type: choice
         default: 'aarch64'
         options:
           - aarch64
