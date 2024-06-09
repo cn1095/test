@@ -127,7 +127,11 @@ jobs:
             rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
             [target.mips-unknown-linux-musl]
             linker = "mips-linux-musl-gcc"
-            rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]  
+            rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
+            [target.x86_64-unknown-linux-musl]
+            rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
+            [target.i686-unknown-linux-musl]
+            rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
             EOF
       - name: 添加编译平台
         run: rustup target add $TARGET
