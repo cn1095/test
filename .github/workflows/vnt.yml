@@ -136,7 +136,7 @@ jobs:
           git clone -b ${{ env.branch }} https://github.com/lbl8603/vnt /opt/vnt
           cd /opt/vnt
           [[ -n $feature ]] && echo "当前${TARGET}架构添加的模块有 ${feature}" && FEATURES="--features ${feature}"
-          cargo build --package vnt-cli --release --target $TARGET -Z build-std=std,panic_abort --no-default-features $FEATURES
+          cargo build --package vnt-cli --release --target $TARGET --no-default-features $FEATURES
           mkdir -p /opt/bin
           mv /opt/vnt/target/${TARGET}/release/vnt-cli /opt/bin/vnt-cli
       - name: Install UPX
