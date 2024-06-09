@@ -89,6 +89,7 @@ jobs:
       - name: 剥离candy
         if: github.event.inputs.strip == 'true'
         run: |
+          cd /opt/bin
           $STRIP /opt/bin/candy
           file ./candy
           ls -alh /opt/bin/candy
