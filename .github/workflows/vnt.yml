@@ -55,12 +55,12 @@ jobs:
                 MUSL_URI=aarch64-linux-musl-cross
                 NAME=vnt-cli_linux-aarch64
                 ;;
-              armv7-eabihf)
+              armv7l-eabihf)
                 TARGET=armv7-unknown-linux-musleabihf
                 MUSL_URI=armv7l-linux-musleabihf-cross
                 NAME=vnt-cli_linux-armv7-eabi
                 ;;
-              armv7-eabi)
+              armv7l-eabi)
                 TARGET=armv7-unknown-linux-musleabi
                 MUSL_URI=armv7m-linux-musleabi-cross
                 NAME=vnt-cli_linux-ramv7-eabihf
