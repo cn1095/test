@@ -2,6 +2,13 @@ name: A编译candy
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: '请填写lanthora/candy的分支或提交记录，默认主分支master'
+        required: true
+        default: 'master'
+env:
+  BRANCH: "${{ github.event.inputs.tag }}"
 
 jobs:
   build:
@@ -36,7 +43,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: lanthora/candy
-          ref: master  #默认使用master分支
+          ref: $BRANCH  #默认使用master分支
       - name: Install UPX
         uses: crazy-max/ghaction-upx@v3
         with:
