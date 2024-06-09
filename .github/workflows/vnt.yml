@@ -22,81 +22,10 @@ on:
           - mips
           - i686
           - x86_64
-      openssl:
-        description: '添加使用源码编译openssl加密算法'
+      feature:
+        description: '按需编译模块 openssl-vendored,ring-cipher,aes_cbc,aes_ecb,aes_gcm,sm4_cbc,chacha20_poly1305,server_encrypt,ip_proxy,port_mapping,log,command,file_config,lz4,zstd  精简就删除不需要的'
         required: true
-        default: false
-        type: boolean
-      ring:
-        description: '添加使用ring中的加密算法'
-        required: true
-        default: false
-        type: boolean
-      cbc:
-        description: '添加支持aes_cbc加密'
-        required: true
-        default: false
-        type: boolean
-      ecb:
-        description: '添加支持aes_ecb加密'
-        required: true
-        default: false
-        type: boolean
-      gcm:
-        description: '添加支持aes_gcm加密'
-        required: true
-        default: false
-        type: boolean
-      sm4:
-        description: '添加支持sm4_cbc加密'
-        required: true
-        default: false
-        type: boolean
-      chacha20:
-        description: '添加支持chacha20和chacha20_poly1305加密'
-        required: true
-        default: false
-        type: boolean
-      server:
-        description: '添加支持服务端加密'
-        required: true
-        default: false
-        type: boolean
-      ip_proxy:
-        description: '添加内置ip代理'
-        required: true
-        default: false
-        type: boolean
-      port:
-        description: '添加端口映射'
-        required: true
-        default: false
-        type: boolean
-      log:
-        description: '添加日志'
-        required: true
-        default: false
-        type: boolean
-      command:
-        description: '添加list、route等命令'
-        required: true
-        default: false
-        type: boolean
-      config:
-        description: '添加yaml配置文件'
-        required: true
-        default: false
-        type: boolean
-      lz4:
-        description: '添加lz4压缩'
-        required: true
-        default: false
-        type: boolean
-      zstd:
-        description: '添加zstd压缩'
-        required: true
-        default: false
-        type: boolean
+        default: 'openssl-vendored,ring-cipher,aes_cbc,aes_ecb,aes_gcm,sm4_cbc,chacha20_poly1305,server_encrypt,ip_proxy,port_mapping,log,command,file_config,lz4,zstd'
       upx:
         description: '编译完成后是否使用upx压缩vnt-cli以减少二进制体积'
         required: true
@@ -108,21 +37,7 @@ env:
   TZ: Asia/Shanghai
   branch: "${{ github.event.inputs.branch }}"
   target: "${{ github.event.inputs.target }}"
-  openssl: "${{ github.event.inputs.openssl }}"
-  ring: "${{ github.event.inputs.ring }}"
-  cbc: "${{ github.event.inputs.cbc }}"
-  ecb: "${{ github.event.inputs.ecb }}"
-  gcm: "${{ github.event.inputs.gcm }}"
-  sm4: "${{ github.event.inputs.sm4 }}"
-  chacha20: "${{ github.event.inputs.chacha20 }}"
-  server: "${{ github.event.inputs.server }}"
-  ip_proxy: "${{ github.event.inputs.ip_proxy }}"
-  port: "${{ github.event.inputs.port }}"
-  log: "${{ github.event.inputs.log }}"
-  command: "${{ github.event.inputs.command }}"
-  config: "${{ github.event.inputs.config }}"
-  lz4: "${{ github.event.inputs.lz4 }}"
-  zstd: "${{ github.event.inputs.zstd }}"
+  feature: "${{ github.event.inputs.feature }}"
 jobs:
  build:
     runs-on: ubuntu-latest
@@ -174,57 +89,7 @@ jobs:
                 NAME=vnt-cli_linux-x86_64
                 ;;
             esac
-            cmd_list=()
-
-            if [ -n "$openssl" ]; then
-              cmd_list+=("$openssl")
-            fi
-            if [ -n "$ring" ]; then
-              cmd_list+=("$ring")
-            fi
-            if [ -n "$cbc" ]; then
-              cmd_list+=("$cbc")
-            fi
-            if [ -n "$ecb" ]; then
-              cmd_list+=("$ecb")
-            fi
-            if [ -n "$gcm" ]; then
-              cmd_list+=("$gcm")
-            fi
-            if [ -n "$sm4" ]; then
-              cmd_list+=("$sm4")
-            fi
-            if [ -n "$chacha20" ]; then
-              cmd_list+=("$chacha20")
-            fi
-            if [ -n "$server" ]; then
-              cmd_list+=("$server")
-            fi
-            if [ -n "$ip_proxy" ]; then
-              cmd_list+=("$ip_proxy")
-            fi
-            if [ -n "$port" ]; then
-              cmd_list+=("$port")
-            fi
-            if [ -n "$log" ]; then
-              cmd_list+=("$log")
-            fi
-            if [ -n "$command" ]; then
-              cmd_list+=("$command")
-            fi
-            if [ -n "$config" ]; then
-              cmd_list+=("$config")
-            fi
-            if [ -n "$lz4" ]; then
-              cmd_list+=("$lz4")
-            fi
-            if [ -n "$zstd" ]; then
-              cmd_list+=("$zstd")
-            fi
-            if [ ${#cmd_list[@]} -ne 0 ]; then
-              cmd=$(IFS=,; echo "${cmd_list[*]}")
-              echo "FEATURES='--features${cmd}'" >> $GITHUB_ENV
-            fi
+            [[ -n "$feature" ]] && echo "FEATURES='--features ${feature}'" >> $GITHUB_ENV
             echo "TARGET=${TARGET}" >> $GITHUB_ENV
             echo "NAME=${NAME}" >> $GITHUB_ENV
             if [[ $target != i686 ]] && [[ $target != x86_64 ]] ; then
