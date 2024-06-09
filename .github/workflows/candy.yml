@@ -10,7 +10,7 @@ on:
       strip:
         description: '使用strip剥离二进制程序以减少体积'
         required: true
-        default: false
+        default: true
         type: boolean
       upx:
         description: '使用upx压缩二进制程序以最大化减少体积'
