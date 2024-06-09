@@ -9,10 +9,19 @@ on:
         default: 'xiaoyaliu/alist:latest'
   
 env:
-  ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}"
-  ALIYUN_NAME_SPACE: "${{ secrets.ALIYUN_NAME_SPACE }}"
+  #阿里云地址 例如 registry.**.aliyuncs.com
+  ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}" 
+
+  #阿里云实例空间名字 
+  ALIYUN_NAME_SPACE: "${{ secrets.ALIYUN_NAME_SPACE }}"  
+
+  #阿里云账户名 例如 abc@email.com
   ALIYUN_REGISTRY_USER: "${{ secrets.ALIYUN_REGISTRY_USER }}"
+
+  #阿里云实例密码 
   ALIYUN_REGISTRY_PASSWORD: "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}"
+
+  #输入的hub.docker仓库名
   IMAGE_NAME: "${{ github.event.inputs.image_name }}"
 
 jobs:
