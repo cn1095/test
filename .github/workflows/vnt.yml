@@ -89,7 +89,7 @@ jobs:
                 NAME=vnt-cli_linux-x86_64
                 ;;
             esac
-            [[ -n "$feature" ]] && echo "FEATURES='--features ${feature}'" >> $GITHUB_ENV
+            
             echo "TARGET=${TARGET}" >> $GITHUB_ENV
             echo "NAME=${NAME}" >> $GITHUB_ENV
             if [[ $target != i686 ]] && [[ $target != x86_64 ]] ; then
@@ -135,6 +135,7 @@ jobs:
         run: |
           git clone -b ${{ env.branch }} https://github.com/lbl8603/vnt /opt/vnt
           cd /opt/vnt
+          [[ -n $feature ]] && echo "FEATURES=--features ${feature}" && FEATURES="--features ${feature}"
           cargo build --package vnt-cli --release --target $TARGET --no-default-features $FEATURES
           mkdir -p /opt/bin
           mv /opt/vnt/target/${TARGET}/release/vnt-cli /opt/bin/vnt-cli
