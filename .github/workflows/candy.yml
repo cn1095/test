@@ -7,6 +7,16 @@ on:
         description: '请填写构建CANDY的lanthora/candy分支或提交记录，默认主分支master'
         required: true
         default: 'master'
+      strip:
+        description: '使用strip剥离二进制程序以减少体积'
+        required: true
+        default: false
+        type: boolean
+      upx:
+        description: '使用upx压缩二进制程序以最大化减少体积'
+        required: true
+        default: false
+        type: boolean
 env:
   BRANCH: "${{ github.event.inputs.tag }}"
 
@@ -75,11 +85,19 @@ jobs:
           mkdir -p /opt/bin
           cp -rf ./candy.cfg /opt/bin/candy.cfg
           cp -rf ./src/main/candy /opt/bin/candy
+          ls -alh /opt/bin/candy
+      - name: 剥离candy
+        if: github.event.inputs.strip == 'true'
+        run: |
           $STRIP /opt/bin/candy
-          cd /opt/bin
           file ./candy
-          cp -rf candy candy_upx
-          upx --lzma --best candy_upx
+          ls -alh /opt/bin/candy
+      - name: 压缩candy
+        if: github.event.inputs.upx == 'true'
+        run: |
+          cd /opt/bin
+          upx --lzma --best candy
+          ls -alh /opt/bin/candy
           #tar -czvf candy-${{ env.TARGET }}.tar.gz candy candy_upx candy.cfg
       - name: 上传
         uses: actions/upload-artifact@v4
