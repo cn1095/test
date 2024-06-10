@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       image_name:
-        description: '请填写docker-hub的仓库名'
+        description: '请填写需要拉取docker-hub的架构 仓库名'
         required: true
-        default: 'xiaoyaliu/alist:latest'
+        default: '--platform=linux/amd64 xiaoyaliu/alist:latest'
   
 env:
   #阿里云地址 例如 registry.**.aliyuncs.com
@@ -22,7 +22,7 @@ env:
   ALIYUN_REGISTRY_PASSWORD: "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}"
 
   #输入的hub.docker仓库名
-  IMAGE_NAME: "${{ github.event.inputs.image_name }}"
+  line: "${{ github.event.inputs.image_name }}"
 
 jobs:
 
@@ -38,12 +38,24 @@ jobs:
     - name: Build and push image Aliyun
       run: |
           docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
-          echo "pull $IMAGE_NAME"
-          docker pull $IMAGE_NAME
-          image_name_only=$(echo $IMAGE_NAME | awk -F'/' '{print $NF}')
-          new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$image_name_only"
-          echo "docker tag $IMAGE_NAME $new_image"
-          docker tag $IMAGE_NAME $new_image
+          echo "docker pull $line"
+          docker pull $line
+          platform=$(echo "$line" | awk -F'--platform[ =]' '{if (NF>1) print $2}' | awk '{print $1}')
+          echo "platform is $platform"
+          # 如果存在架构信息 将架构信息拼到镜像名称前面
+          if [ -z "$platform" ]; then
+              platform_prefix=""
+          else
+              platform_prefix="${platform//\//_}_"
+          fi
+          echo "platform_prefix is $platform_prefix"
+          # 获取镜像的完整名称，例如kasmweb/nginx:1.25.3（命名空间/镜像名:版本号）
+          image=$(echo "$line" | awk '{print $NF}')
+          # 获取 镜像名:版本号  例如nginx:1.25.3
+          image_name_tag=$(echo "$image" | awk -F'/' '{print $NF}')
+          new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$platform_prefix$image_name_tag"
+          echo "docker tag $image $new_image"
+          docker tag $image $new_image
           echo "docker push $new_image"
           docker push $new_image
 
