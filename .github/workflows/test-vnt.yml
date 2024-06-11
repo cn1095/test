@@ -44,27 +44,27 @@ jobs:
             case $target in 
               mipsel)
                 TARGET=mipsel-unknown-linux-musl
-                MUSL_URI=mipsel-linux-musl-cross
+                MUSL_URI=mipsel-unknown-linux-muslsf
                 NAME=vnt-cli_linux-mipsel
                 ;;
               aarch64)
                TARGET=aarch64-unknown-linux-musl
-                MUSL_URI=aarch64-linux-musl-cross
+                MUSL_URI=aarch64-unknown-linux-musl
                 NAME=vnt-cli_linux-aarch64
                 ;;
               arm-eabihf)
                 TARGET=arm-unknown-linux-musleabihf
-                MUSL_URI=arm-linux-musleabihf-cross
+                MUSL_URI=arm-unknown-linux-musleabihf
                 NAME=vnt-cli_linux-arm-eabihf
                 ;;
               arm-eabi)
                 TARGET=arm-unknown-linux-musleabi
-                MUSL_URI=arm-linux-musleabi-cross
+                MUSL_URI=arm-unknown-linux-musleabi
                 NAME=vnt-cli_linux-arm-eabi
                 ;;
               mips)
                 TARGET=mips-unknown-linux-musl
-                MUSL_URI=mips-linux-musl-cross
+                MUSL_URI=mips-unknown-linux-muslsf
                 NAME=vnt-cli_linux-mips
                 ;;
               x86_64)
