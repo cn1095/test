@@ -27,15 +27,16 @@ jobs:
             sudo pkg install -y \
               autoconf \
               automake \
-              gcc \
-              git \
+              git-tiny \
               gmake \
               python3 \
-              pkgconf
+              jq \
+              bash
             ./autogen.sh
-            ./configure
+            ./configure CC=clang
             gmake all
             file supernode
+            ls -alh supernode
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
