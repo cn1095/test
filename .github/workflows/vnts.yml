@@ -1,14 +1,12 @@
-name: vnts
+name: A编译vnts-FreeBSD
 
 on:
   workflow_dispatch:
-
+  
 env:
   CARGO_TERM_COLOR: always
-  TZ: Asia/Shanghai
-
 jobs:
-  build:
+ build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,39 +14,23 @@ jobs:
         with:
           repository: lbl8603/vnts
           ref: master #默认使用master分支
-
-      - name: Install dependencies
+      - name: 安装编译环境
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu qemu-user-static binfmt-support build-essential
           rustup target add x86_64-unknown-freebsd
-
-      - name: Set FreeBSD library path
-        run: |
-         echo "/usr/local/freebsd/lib" | sudo tee /etc/ld.so.conf.d/freebsd.conf
-         sudo ldconfig
-
-      - name: Install cross
+      - name: 安装 cross
         run: cargo install cross --git https://github.com/cross-rs/cross
 
-      - name: Download FreeBSD base
-        run: |
-          wget -q https://download.freebsd.org/ftp/releases/amd64/13.2-RELEASE/base.txz
-          sudo mkdir -p /usr/local/freebsd
-          sudo tar -C /usr/local/freebsd -xf base.txz
-          sudo ln -s /usr/local/freebsd/lib /usr/local/freebsd/usr/lib
-          sudo ln -s /usr/local/freebsd/usr/include /usr/local/freebsd/include
-      - name: Build with cross for FreeBSD with static linking
+      - name: 交叉编译 FreeBSD 的动态库 vnts 
         env:
-          RUSTFLAGS: "-C target-feature=+crt-static -C strip=symbols"
+          RUSTFLAGS: "-C strip=symbols"
         run: |
           cross build --target x86_64-unknown-freebsd --release --features ring-cipher,web
-
-      - name: Verify binary is statically linked
-        run: file target/x86_64-unknown-freebsd/release/vnts
+          file target/x86_64-unknown-freebsd/release/vnts
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: vnts
+          name: vnts-FreeBSD
           path: target/x86_64-unknown-freebsd/release/vnts
