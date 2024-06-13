@@ -17,8 +17,7 @@ jobs:
       - name: Set up FreeBSD
         uses: vmactions/freebsd-vm@v0.2.2
         with:
-          freebsd-version: 12.1
-          memory: 4G
+          release: "13.2"
 
       - name: Install dependencies
         run: |
