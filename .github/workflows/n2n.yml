@@ -31,7 +31,8 @@ jobs:
               gmake \
               python3 \
               jq \
-              bash
+              bash \
+              pkgconf
             ./autogen.sh
             ./configure CC=clang
             gmake all
