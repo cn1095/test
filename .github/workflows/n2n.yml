@@ -34,13 +34,12 @@ jobs:
               bash \
               pkgconf
             ./autogen.sh
-            ./configure CC=clang
+            ./configure CC=clang LDFLAGS="-static" CFLAGS="-static" 
             gmake all
             file supernode
-            ls -alh supernode
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
            name: n2n-freebsd
-           path: n2n/build/
+           path: ./supernode
