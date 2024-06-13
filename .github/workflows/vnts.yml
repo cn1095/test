@@ -2,12 +2,13 @@ name: vnts
 
 on:
   workflow_dispatch:
-  
+
 env:
   CARGO_TERM_COLOR: always
   TZ: Asia/Shanghai
+
 jobs:
- build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,11 +16,25 @@ jobs:
         with:
           repository: lbl8603/vnts
           ref: master #默认使用master分支
+
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu qemu-user-static binfmt-support build-essential
           rustup target add x86_64-unknown-freebsd
+
+      - name: Download FreeBSD base
+        run: |
+          wget -q https://download.freebsd.org/ftp/releases/amd64/13.2-RELEASE/base.txz
+          sudo mkdir -p /usr/local/freebsd
+          sudo tar -C /usr/local/freebsd -xf base.txz
+          sudo ln -s /usr/local/freebsd/lib /usr/local/freebsd/usr/lib
+          sudo ln -s /usr/local/freebsd/usr/include /usr/local/freebsd/include
+
+      - name: Set FreeBSD library path
+        run: |
+         echo "/usr/local/freebsd/lib" | sudo tee /etc/ld.so.conf.d/freebsd.conf
+         sudo ldconfig
 
       - name: Install cross
         run: cargo install cross --git https://github.com/cross-rs/cross
