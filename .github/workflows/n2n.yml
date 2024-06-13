@@ -1,0 +1,41 @@
+name: A编译n2n-FreeBSD
+
+on:
+  workflow_dispatch:
+  
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ntop/n2n
+          ref: dev #默认使用dev分支
+      - name: Set up FreeBSD
+        uses: vmactions/freebsd-vm@v0.2.2
+        with:
+          freebsd-version: 12.1
+          memory: 4G
+
+      - name: Install dependencies
+        run: |
+           sudo pkg update
+           sudo pkg install -y cmake gmake git
+
+      - name: Build n2n
+        run: |
+          git clone https://github.com/ntop/n2n.git
+          cd n2n
+          mkdir build
+          cd build
+          cmake ..
+          gmake
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+           name: n2n-freebsd
+           path: n2n/build/
