@@ -1,0 +1,49 @@
+name: vnts
+
+on:
+  workflow_dispatch:
+  
+env:
+  CARGO_TERM_COLOR: always
+  TZ: Asia/Shanghai
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 设置编译环境
+        run: |
+            sudo apt-get update
+            sudo apt-get install build-essential curl file git
+            sudo apt-get install clang llvm lld
+            sudo timedatectl set-timezone "Asia/Shanghai"
+            rustup toolchain install nightly
+            rustup target add x86_64-unknown-freebsd
+            cargo install xargo
+            cat >>~/.cargo/config <<EOF
+            [target.x86_64-unknown-freebsd]
+            linker = "clang"
+            ar = "llvm-ar"
+            rustflags = [
+            "-L/usr/local/freebsd-libs",
+            "-C link-arg=-Wl,-rpath,/usr/local/freebsd-libs",
+            "target-feature=+crt-static","-C", "strip=symbols"]
+            EOF
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: lbl8603/vnts
+          ref: master #默认使用master分支
+      - name: 添加编译平台
+        run: rustup target add $TARGET
+      - name: 开始编译
+        run: |
+          echo '[toolchain]' > ./rust-toolchain
+          echo 'channel = "nightly"' >> ./rust-toolchain
+          echo '[target.x86_64-unknown-freebsd.dependencies.std]' >> ./Xargo.toml
+          xargo build --target x86_64-unknown-freebsd --release --features ring-cipher,web
+      - name: 上传
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vnts
+          path: ./target/x86_64-unknown-freebsd/release/vnts
