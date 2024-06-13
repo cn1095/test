@@ -28,7 +28,7 @@ jobs:
         env:
           RUSTFLAGS: "-C target-feature=+crt-static -C strip=symbols"
         run: |
-          cross build --target x86_64-unknown-freebsd --release
+          cross build --target x86_64-unknown-freebsd --release --features ring-cipher,web
 
       - name: Verify binary is statically linked
         run: file target/x86_64-unknown-freebsd/release/vnts
