@@ -33,8 +33,6 @@ jobs:
         with:
           repository: lbl8603/vnts
           ref: master #默认使用master分支
-      - name: 添加编译平台
-        run: rustup target add $TARGET
       - name: 开始编译
         run: |
           echo '[toolchain]' > ./rust-toolchain
