@@ -17,7 +17,7 @@ jobs:
             sudo apt-get install clang llvm lld
             sudo timedatectl set-timezone "Asia/Shanghai"
             rustup toolchain install nightly
-            rustup component add rust-src
+            rustup component add rust-src --toolchain nightly
             rustup target add x86_64-unknown-freebsd
             cargo install xargo
             cat >>~/.cargo/config <<EOF
