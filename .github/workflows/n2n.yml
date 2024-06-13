@@ -17,7 +17,8 @@ jobs:
       - name: Set up FreeBSD
         uses: vmactions/freebsd-vm@v0.2.2
         with:
-          release: "13.2"
+          freebsd-version: 12.1
+          memory: 4G
 
       - name: Install dependencies
         run: |
@@ -26,8 +27,7 @@ jobs:
 
       - name: Build n2n
         run: |
-          git clone https://github.com/ntop/n2n.git
-          cd n2n
+          
           mkdir build
           cd build
           cmake ..
