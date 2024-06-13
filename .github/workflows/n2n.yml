@@ -15,23 +15,26 @@ jobs:
           repository: ntop/n2n
           ref: dev #默认使用dev分支
       - name: Set up FreeBSD
-        uses: vmactions/freebsd-vm@v0.2.2
+        uses: cross-platform-actions/action@v0.15.0
         with:
-          freebsd-version: 12.1
-          memory: 4G
-
-      - name: Install dependencies
-        run: |
-           sudo pkg update
-           sudo pkg install -y cmake gmake git
-
-      - name: Build n2n
-        run: |
-          
-          mkdir build
-          cd build
-          cmake ..
-          gmake
+          operating_system: freebsd
+          architecture: x86-64
+          version: '13.2'
+          shell: bash
+          memory: 5G
+          cpu_count: 4
+          run: |
+            sudo pkg install -y \
+              autoconf \
+              automake \
+              gcc \
+              git \
+              gmake \
+              python3
+            ./autogen.sh
+            ./configure
+            gmake all
+            file supernode
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
