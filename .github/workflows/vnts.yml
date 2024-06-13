@@ -18,14 +18,20 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y qemu qemu-user-static binfmt-support
+          sudo apt-get install -y qemu qemu-user-static binfmt-support build-essential
           rustup target add x86_64-unknown-freebsd
 
       - name: Install cross
         run: cargo install cross --git https://github.com/cross-rs/cross
 
-      - name: Build with cross for FreeBSD
-        run: cross build --target x86_64-unknown-freebsd --release
+      - name: Build with cross for FreeBSD with static linking
+        env:
+          RUSTFLAGS: "-C target-feature=+crt-static -C strip=symbols"
+        run: |
+          cross build --target x86_64-unknown-freebsd --release
+
+      - name: Verify binary is statically linked
+        run: file target/x86_64-unknown-freebsd/release/vnts
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
