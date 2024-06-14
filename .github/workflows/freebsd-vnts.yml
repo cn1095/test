@@ -35,7 +35,7 @@ jobs:
               export CC=clang
               export CXX=clang++
               export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
-              cargo build --release --features normal,web
+              cargo build --release --features ring-cipher,web
               file ./target/release/vnts
 
       - name: Upload artifact
