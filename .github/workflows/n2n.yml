@@ -37,7 +37,7 @@ jobs:
       - name: static
         if: github.event.inputs.static == 'true'
         run: |
-          echo 'build_static="LDFLAGS="-static" CFLAGS="-static""' >> $GITHUB_ENV
+          echo 'build_static="-static"' >> $GITHUB_ENV
       - name: name
         run: |
           if [[ $BRANCH == 'dev' ]] ; then
