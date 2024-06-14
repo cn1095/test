@@ -1,0 +1,37 @@
+name: vnts-FreeBSD测试
+
+on:
+  workflow_dispatch:
+  
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: lbl8603/vnts
+          ref: master #默认使用master分支
+      - name: Set up FreeBSD
+        uses: cross-platform-actions/action@v0.23.0
+        with:
+          operating_system: freebsd
+          architecture: x86-64
+          version: '13.2'
+          shell: bash
+          memory: 5G
+          cpu_count: 4
+          run: |
+            sudo pkg install -y \
+              build-essential \
+              git
+              export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
+              cargo build --release --features ring-cipher,web
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vnts-FreeBSD
+          path: target/release/vnts
