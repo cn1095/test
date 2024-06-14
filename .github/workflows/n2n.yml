@@ -12,11 +12,6 @@ on:
         required: true
         default: false
         type: boolean
-      upx:
-        description: '使用upx压缩二进制程序以最大化减少体积'
-        required: true
-        default: false
-        type: boolean
       static:
         description: '采用静态编译'
         required: true
@@ -94,21 +89,6 @@ jobs:
               [[ -f ./bin/example_sn_embed ]] && strip ./bin/example_sn_embed
               [[ -f ./bin/n2n-benchmark ]] && strip ./bin/n2n-benchmark
             fi
-      - name: Install UPX
-        if: github.event.inputs.upx == 'true'
-        uses: crazy-max/ghaction-upx@v3
-        with:
-          version: latest
-          install-only: true
-      - name: upx
-        if: github.event.inputs.upx == 'true'
-        run: |
-          upx --lzma --best ./bin/edge
-          upx --lzma --best ./bin/supernode
-          [[ -f ./bin/example_edge_embed_quick_edge_init ]] && upx --lzma --best ./bin/example_edge_embed_quick_edge_init
-          [[ -f ./bin/example_edge_embed ]] && upx --lzma --best ./bin/example_edge_embed
-          [[ -f ./bin/example_sn_embed ]] && upx --lzma --best ./bin/example_sn_embed
-          [[ -f ./bin/n2n-benchmark ]] && upx --lzma --best ./bin/n2n-benchmark
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
