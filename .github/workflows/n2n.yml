@@ -81,7 +81,7 @@ jobs:
             mv -f supernode ./bin/supernode
             [[ -f ./examples/example_edge_embed_quick_edge_init ]] && mv -f ./examples/example_edge_embed_quick_edge_init ./example_edge_embed_quick_edge_init
             [[ -f ./examples/example_edge_embed ]] && mv -f ./examples/example_edge_embed ./example_edge_embed
-            [[ -f ./examples/examplesexample_sn_embed ]] && mv -f ./examples/examplesexample_sn_embed ./examplesexample_sn_embed
+            [[ -f ./examples/example_sn_embed ]] && mv -f ./examples/example_sn_embed ./example_sn_embed
             [[ -f ./example_edge_embed_quick_edge_init ]] && mv -f example_edge_embed_quick_edge_init ./bin/example_edge_embed_quick_edge_init
             [[ -f ./example_edge_embed ]] && mv -f example_edge_embed ./bin/example_edge_embed
             [[ -f ./example_sn_embed ]] && mv -f example_sn_embed ./bin/example_sn_embed
