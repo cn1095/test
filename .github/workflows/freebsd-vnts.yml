@@ -1,4 +1,4 @@
-name: vnts-FreeBSD测试
+name: candy-FreeBSD测试
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: lbl8603/vnts
+          repository: lanthora/candy
           ref: master #默认使用master分支
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
@@ -24,22 +24,14 @@ jobs:
           memory: 5G
           cpu_count: 4
           run: |
-              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-              source $HOME/.cargo/env
-              mkdir -p .cargo
-              cat > .cargo/config.toml <<EOL
-              [target.x86_64-unknown-freebsd]
-              linker = "clang"
-              rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
-              EOL
               export CC=clang
               export CXX=clang++
-              export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
-              cargo build --release --features ring-cipher,web
-              file ./target/release/vnts
+              cmake -DCANDY_STATIC=1 -DTARGET_OPENSSL=BSD-generic64 -DCMAKE_BUILD_TYPE=Release .
+              make -j$(nproc)
+              file ./src/main/candy
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vnts-FreeBSD
-          path: target/release/vnts
+          name: candy-FreeBSD
+          path: ./src/main/candy
