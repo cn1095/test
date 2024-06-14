@@ -26,16 +26,11 @@ jobs:
           run: |
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
               source $HOME/.cargo/env
-              mkdir -p .cargo
-              cat > .cargo/config.toml <<EOL
-              [target.x86_64-unknown-freebsd]
-              linker = "clang"
-              rustflags = ["-C", "target-feature=+crt-static","-C", "strip=symbols"]
-              EOL
               export CC=clang
               export CXX=clang++
+              cargo install cross --git https://github.com/cross-rs/cross
               export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
-              cargo build --release --features ring-cipher
+              cross build --release --features ring-cipher,web
               file ./target/release/vnts
 
       - name: Upload artifact
