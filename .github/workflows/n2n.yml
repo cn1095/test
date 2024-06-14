@@ -47,9 +47,11 @@ jobs:
           [[ -f ./VERSION ]] && VERSION=$(cat ./VERSION)
           sudo timedatectl set-timezone "Asia/Shanghai"
           VERSION=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
-          sed -i "s/AC_INIT(\[edge\], m4_esyscmd(\[scripts\/version\.sh | tr -d '\\\n'\]))/AC_INIT([edge], $VERSION)/" configure.ac
-          sed -i "s/AC_DEFINE(\[PACKAGE_BUILDDATE\], \"\[m4_esyscmd(\[scripts\/version\.sh date | tr -d '\\\n'\])\]\", \[Last change date\])/AC_DEFINE([PACKAGE_BUILDDATE], \"$DATE\", [Last change date])/" configure.ac
-          cat configure.ac
+          if [[ -f ./configure.ac ]] ; then
+            sed -i "s/AC_INIT(\[edge\], m4_esyscmd(\[scripts\/version\.sh | tr -d '\\\n'\]))/AC_INIT([edge], $VERSION)/" configure.ac
+            sed -i "s/AC_DEFINE(\[PACKAGE_BUILDDATE\], \"\[m4_esyscmd(\[scripts\/version\.sh date | tr -d '\\\n'\])\]\", \[Last change date\])/AC_DEFINE([PACKAGE_BUILDDATE], \"$DATE\", [Last change date])/" configure.ac
+            cat configure.ac
+          fi
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
         with:
