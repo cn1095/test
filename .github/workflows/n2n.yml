@@ -34,10 +34,6 @@ jobs:
         with:
           repository: ntop/n2n
           ref: ${{ env.BRANCH }}  #2.8-stable #默认使用dev分支
-      - name: Fix Checkout
-        if: github.event.inputs.tag == 'dev'
-        run: |
-          git fetch --force --tags
       - name: static
         if: github.event.inputs.static == 'true'
         run: |
@@ -51,6 +47,13 @@ jobs:
           elif [[ $BRANCH == '3.0-stable' ]] ; then
             echo 'build_name=3.0-' >> $GITHUB_ENV
           fi
+      - name: Fix Checkout
+        run: |
+          [[ -f ./VERSION ]] && VERSION=$(cat /VERSION)
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          DATE=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
+          sed -i "s/AC_INIT(\[edge\], m4_esyscmd(\[scripts\/version\.sh | tr -d '\\\n'\]))/AC_INIT([edge], [$VERSION])/" configure.ac
+          sed -i "s/AC_DEFINE(\[PACKAGE_BUILDDATE\], \"\[m4_esyscmd(\[scripts\/version\.sh date | tr -d '\\\n'\])\]\", \[Last change date\])/AC_DEFINE([PACKAGE_BUILDDATE], \"[$DATE]\", [Last change date])/" configure.ac
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
         with:
