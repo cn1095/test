@@ -1,0 +1,48 @@
+name: cucurbita
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: '请填写cucurbita仓库名称，默认官方仓库lanthora/cucurbita'
+        required: true
+        default: 'lanthora/cucurbita'
+      tag:
+        description: '请填写仓库的分支或提交记录，默认主分支master'
+        required: true
+        default: 'master'
+env:
+  BRANCH: "${{ github.event.inputs.tag }}"
+  NAME: "${{ github.event.inputs.name }}"
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 获取最新Go
+        run: |
+          latest_version=$(curl -L -k -s https://golang.org/dl/?mode=json | grep -m 1 -o '"version": "[^"]*' | sed 's/"version": "//' | tr -d 'go" ')
+          echo "go版本=$latest_version"
+          echo "gotag=$latest_version" >> $GITHUB_ENV
+      - name: 安装go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.gotag }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.NAME }}
+          ref: ${{ env.BRANCH }} #默认使用master分支
+      - 
+        name: 编译
+        run: |
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          GOOS=freebsd GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w"
+      - name: 上传
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cucurbita-FreeBSD
+          path: ./cucurbita
+          
+          
