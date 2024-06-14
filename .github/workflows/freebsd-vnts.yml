@@ -24,15 +24,12 @@ jobs:
           memory: 5G
           cpu_count: 4
           run: |
-            sudo pkg install -y \
-              git
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
               source $HOME/.cargo/env
               export CC=clang
               export CXX=clang++
-              cargo install cross --git https://github.com/cross-rs/cross
               export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
-              cross build --release --features ring-cipher,web
+              cargo build --release --features ring-cipher,web
               file ./target/release/vnts
 
       - name: Upload artifact
