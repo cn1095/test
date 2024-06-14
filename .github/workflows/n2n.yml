@@ -82,17 +82,17 @@ jobs:
             mkdir -p ./bin
             mv -f edge ./bin/edge
             mv -f supernode ./bin/supernode
-            mv -f example_edge_embed_quick_edge_init ./bin/example_edge_embed_quick_edge_init
-            mv -f example_edge_embed ./bin/example_edge_embed
-            mv -f example_sn_embed ./bin/example_sn_embed
-            mv -f ./tools/n2n-benchmark ./bin/n2n-benchmark
+            [[ -f ./bin/example_edge_embed_quick_edge_init ]] && mv -f example_edge_embed_quick_edge_init ./bin/example_edge_embed_quick_edge_init
+            [[ -f ./bin/example_edge_embed ]] && mv -f example_edge_embed ./bin/example_edge_embed
+            [[ -f ./bin/example_sn_embed ]] && mv -f example_sn_embed ./bin/example_sn_embed
+            [[ -f ./bin/n2n-benchmark ]] && mv -f ./tools/n2n-benchmark ./bin/n2n-benchmark
             if [[ github.event.inputs.strip == 'true' ]] ; then
               strip ./bin/edge
               strip ./bin/supernode
-              strip ./bin/example_edge_embed_quick_edge_init
-              strip ./bin/example_edge_embed
-              strip ./bin/example_sn_embed
-              strip ./bin/n2n-benchmark
+              [[ -f ./bin/example_edge_embed_quick_edge_init ]] && strip ./bin/example_edge_embed_quick_edge_init
+              [[ -f ./bin/example_edge_embed ]] && strip ./bin/example_edge_embed
+              [[ -f ./bin/example_sn_embed ]] && strip ./bin/example_sn_embed
+              [[ -f ./bin/n2n-benchmark ]] && strip ./bin/n2n-benchmark
             fi
       - name: Install UPX
         if: github.event.inputs.upx == 'true'
@@ -105,10 +105,10 @@ jobs:
         run: |
           upx --lzma --best ./bin/edge
           upx --lzma --best ./bin/supernode
-          upx --lzma --best ./bin/example_edge_embed_quick_edge_init
-          upx --lzma --best ./bin/example_edge_embed
-          upx --lzma --best ./bin/example_sn_embed
-          upx --lzma --best ./bin/n2n-benchmark
+          [[ -f ./bin/example_edge_embed_quick_edge_init ]] && upx --lzma --best ./bin/example_edge_embed_quick_edge_init
+          [[ -f ./bin/example_edge_embed ]] && upx --lzma --best ./bin/example_edge_embed
+          [[ -f ./bin/example_sn_embed ]] && upx --lzma --best ./bin/example_sn_embed
+          [[ -f ./bin/n2n-benchmark ]] && upx --lzma --best ./bin/n2n-benchmark
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
