@@ -74,7 +74,7 @@ jobs:
               bash \
               pkgconf
             ./autogen.sh
-            ./configure CC=clang ${{ env.build_static }} 
+            ./configure CC=clang LDFLAGS="${{ env.build_static }}" CFLAGS="${{ env.build_static }}"
             gmake all
             file supernode
             mkdir -p ./bin
