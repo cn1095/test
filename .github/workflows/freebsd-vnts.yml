@@ -26,12 +26,14 @@ jobs:
           run: |
             sudo pkg install -y \
               cmake \
-              perl5
+              perl5 \
+              git
               export CC=clang
               export CXX=clang++
               cmake -DCANDY_STATIC=1 -DCMAKE_BUILD_TYPE=Release .
               make -j$(nproc)
               file ./src/main/candy
+              strip ./src/main/candy
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
