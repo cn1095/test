@@ -37,9 +37,16 @@ jobs:
             ./configure CC=clang LDFLAGS="-static" CFLAGS="-static" 
             gmake all
             file supernode
+            mkdir -p ./bin
+            mv -f edge ./bin/edge
+            mv -f supernode ./bin/supernode
+            mv -f example_edge_embed_quick_edge_init ./bin/example_edge_embed_quick_edge_init
+            mv -f example_edge_embed ./bin/example_edge_embed
+            mv -f example_sn_embed ./bin/example_sn_embed
+            mv -f n2n-benchmark ./bin/n2n-benchmark
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
            name: n2n-freebsd
-           path: ./supernode
+           path: ./bin/*
