@@ -25,7 +25,8 @@ jobs:
           cpu_count: 4
           run: |
             sudo pkg install -y \
-              cmake
+              cmake \
+              perl5
               export CC=clang
               export CXX=clang++
               cmake -DCANDY_STATIC=1 -DCMAKE_BUILD_TYPE=Release .
