@@ -26,6 +26,8 @@ jobs:
           run: |
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
               source $HOME/.cargo/env
+              export CC=clang
+              export CXX=clang++
               export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
               cargo build --release --features ring-cipher,web
               file ./target/release/vnts
