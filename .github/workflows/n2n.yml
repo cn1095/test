@@ -49,7 +49,7 @@ jobs:
           fi
       - name: Fix Checkout
         run: |
-          [[ -f ./VERSION ]] && VERSION=$(cat /VERSION)
+          [[ -f ./VERSION ]] && VERSION=$(cat ./VERSION)
           sudo timedatectl set-timezone "Asia/Shanghai"
           DATE=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
           sed -i "s/AC_INIT(\[edge\], m4_esyscmd(\[scripts\/version\.sh | tr -d '\\\n'\]))/AC_INIT([edge], [$VERSION])/" configure.ac
