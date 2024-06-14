@@ -2,9 +2,29 @@ name: A编译n2n-FreeBSD
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: '请填写构建N2N的ntop/n2n分支或提交记录，默认主分支dev （dev - 2.8-stable - 3.0-stable）'
+        required: true
+        default: 'dev'
+      strip:
+        description: '使用strip剥离二进制程序以减少体积'
+        required: true
+        default: false
+        type: boolean
+      upx:
+        description: '使用upx压缩二进制程序以最大化减少体积'
+        required: true
+        default: false
+        type: boolean
+      static:
+        description: '采用静态编译'
+        required: true
+        default: false
+        type: boolean
   
 env:
-  CARGO_TERM_COLOR: always
+  BRANCH: "${{ github.event.inputs.tag }}"
 jobs:
  build:
     runs-on: ubuntu-latest
@@ -13,10 +33,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ntop/n2n
-          ref: dev  #2.8-stable #默认使用dev分支
+          ref: ${{ env.BRANCH }}  #2.8-stable #默认使用dev分支
       - name: Fix Checkout
+        if: github.event.inputs.tag == 'dev'
         run: |
           git fetch --force --tags
+      - name: static
+        if: github.event.inputs.static == 'true'
+        run: |
+          echo 'build_static="LDFLAGS=-static CFLAGS=-static"' >> $GITHUB_ENV
+      - name: name
+        run: |
+          if [[ $BRANCH == 'dev' ]] ; then
+             echo 'build_name=3.1-' >> $GITHUB_ENV
+          elif [[ $BRANCH == '2.8-stable' ]] ; then
+            echo 'build_name=2.8-' >> $GITHUB_ENV
+          elif [[ $BRANCH == '3.0-stable' ]] ; then
+            echo 'build_name=3.0-' >> $GITHUB_ENV
+          fi
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
         with:
@@ -34,11 +68,10 @@ jobs:
               gmake \
               python3 \
               jq \
-              git \
               bash \
               pkgconf
             ./autogen.sh
-            ./configure CC=clang LDFLAGS="-static" CFLAGS="-static" 
+            ./configure CC=clang ${{ env.build_static }} 
             gmake all
             file supernode
             mkdir -p ./bin
@@ -48,9 +81,31 @@ jobs:
             mv -f example_edge_embed ./bin/example_edge_embed
             mv -f example_sn_embed ./bin/example_sn_embed
             mv -f ./tools/n2n-benchmark ./bin/n2n-benchmark
-
+            if [[ github.event.inputs.strip == 'true' ]] ; then
+              strip ./bin/edge
+              strip ./bin/supernode
+              strip ./bin/example_edge_embed_quick_edge_init
+              strip ./bin/example_edge_embed
+              strip ./bin/example_sn_embed
+              strip ./bin/n2n-benchmark
+            fi
+      - name: Install UPX
+        if: github.event.inputs.upx == 'true'
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          version: latest
+          install-only: true
+      - name: upx
+        if: github.event.inputs.upx == 'true'
+        run: |
+          upx --lzma --best ./bin/edge
+          upx --lzma --best ./bin/supernode
+          upx --lzma --best ./bin/example_edge_embed_quick_edge_init
+          upx --lzma --best ./bin/example_edge_embed
+          upx --lzma --best ./bin/example_sn_embed
+          upx --lzma --best ./bin/n2n-benchmark
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
-           name: n2n-freebsd
+           name: n2n-${{ env.build_name }}freebsd
            path: ./bin/*
