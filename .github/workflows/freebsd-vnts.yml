@@ -28,7 +28,7 @@ jobs:
               cmake
               export CC=clang
               export CXX=clang++
-              cmake -DCANDY_STATIC=1 -DTARGET_OPENSSL=BSD-x86_64 -DCMAKE_BUILD_TYPE=Release .
+              cmake -DCANDY_STATIC=1 -DCMAKE_BUILD_TYPE=Release .
               make -j$(nproc)
               file ./src/main/candy
 
