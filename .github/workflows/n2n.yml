@@ -76,7 +76,6 @@ jobs:
               pkgconf
             ./autogen.sh
             ./configure CC=clang LDFLAGS="${{ env.build_static }}" CFLAGS="${{ env.build_static }}"
-            all: version
             sed -i "s/all: version/all: /" Makefile
             gmake all
             file supernode
