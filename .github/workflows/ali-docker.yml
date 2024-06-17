@@ -50,13 +50,7 @@ on:
         required: true
         default: false
         type: boolean
-      tar:
-        description: '打包出tar压缩包文件'
-        required: true
-        default: false
-        type: boolean
       
-  
 env:
   #阿里云地址 例如 registry.**.aliyuncs.com
   ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}" 
@@ -82,7 +76,6 @@ env:
   armv6: "${{ github.event.inputs.armv6 }}"
   armv5: "${{ github.event.inputs.armv5 }}"
   s390x: "${{ github.event.inputs.s390x }}"
-  tar: "${{ github.event.inputs.tar }}"
 
 jobs:
 
