@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: lbl8603/vnts
+          repository: cn1095/vnts
           ref: master #默认使用master分支
       - name: 安装编译环境
         run: |
