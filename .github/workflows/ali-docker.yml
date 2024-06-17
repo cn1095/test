@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       image_name:
-        description: '请填写需要拉取hub.docker的仓库名'
+        description: '请填写需要拉取hub.docker的仓库名镜像名版本号'
         required: true
         default: 'xiaoyaliu/alist:latest'
       name:
-        description: '自定义版本号，默认跟随上方的版本'
+        description: '自定义阿里docker镜像的版本号，默认跟随上方的版本'
         required: false
         default: ''
       amd64:
@@ -81,9 +81,6 @@ jobs:
     steps:
     - name: 设置 Docker Buildx
       uses: docker/setup-buildx-action@v3
-
-    - name: 设置工作流程目录
-      uses: actions/checkout@v4   #默认本仓库
       
     - name: 登录阿里docker
       run: echo $ALIYUN_REGISTRY_PASSWORD | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin 
