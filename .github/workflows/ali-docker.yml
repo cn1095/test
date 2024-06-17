@@ -88,19 +88,6 @@ jobs:
     - name: 登录阿里docker
       run: echo $ALIYUN_REGISTRY_PASSWORD | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin 
 
-    - name: 获取docker信息
-      run: |
-          # 获取镜像的完整名称，例如kasmweb/nginx:1.25.3（命名空间/镜像名:版本号）
-          image=$(echo "$line" | awk '{print $NF}')
-          # 获取 镜像名:版本号  例如nginx:1.25.3
-          image_name_tag=$(echo "$image" | awk -F'/' '{print $NF}')
-          # 获取命名空间 例如kasmweb  这里有种特殊情况 docker.io/nginx，把docker.io当成命名空间，也OK
-          name_space=$(echo "$image" | awk -F'/' '{if (NF==3) print $2; else if (NF==2) print $1; else print ""}')
-          # 获取镜像名例  例如nginx
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
-          # 将@sha256:等字符删除
-          image_name_tag="${image_name_tag%%@*}"
-
     - name: 拉取x86_64架构
       if: github.event.inputs.amd64 == 'true'
       run: |
@@ -115,7 +102,7 @@ jobs:
           echo "将更名后的镜像$new_image 推送到阿里docker"
           docker push $new_image
           echo "清理本地镜像$line ..."
-          docker rmi $image
+          docker rmi $line
           echo "AMD64=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取386架构
@@ -130,7 +117,7 @@ jobs:
           echo "将更名后的镜像$new_image 推送到阿里docker"
           docker push $new_image
           echo "清理本地镜像$line ..."
-          docker rmi $image
+          docker rmi $line
           echo "I386=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取arm64架构
@@ -145,7 +132,7 @@ jobs:
           echo "将更名后的镜像$new_image 推送到阿里docker"
           docker push $new_image
           echo "清理本地镜像$line ..."
-          docker rmi $image
+          docker rmi $line
           echo "ARM64=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取armv7架构
@@ -160,7 +147,7 @@ jobs:
           echo "将更名后的镜像$new_image 推送到阿里docker"
           docker push $new_image
           echo "清理本地镜像$line ..."
-          docker rmi $image
+          docker rmi $line
           echo "ARMV7=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取armv6架构
@@ -175,7 +162,7 @@ jobs:
           echo "将更名后的镜像$new_image 推送到阿里docker"
           docker push $new_image
           echo "清理本地镜像$line ..."
-          docker rmi $image
+          docker rmi $line
           echo "ARMV6=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取armv5架构
@@ -190,7 +177,7 @@ jobs:
           echo "将更名后的镜像$new_image 推送到阿里docker"
           docker push $new_image
           echo "清理本地镜像$line ..."
-          docker rmi $image
+          docker rmi $line
           echo "ARMV5=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取s390x架构
@@ -205,7 +192,7 @@ jobs:
           echo "将更名后的镜像$new_image 推送到阿里docker"
           docker push $new_image
           echo "清理本地镜像$line ..."
-          docker rmi $image
+          docker rmi $line
           echo "S390X=${new_image}" >> $GITHUB_ENV
 
     - name: 合并多架构清单
