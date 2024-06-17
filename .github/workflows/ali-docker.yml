@@ -101,8 +101,6 @@ jobs:
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:amd64"
           echo "将拉取的$line x86_64架构镜像更名为 $new_image"
           docker tag $line $new_image
-          echo "将更名后的镜像$new_image 推送到阿里docker"
-          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "AMD64=${new_image}" >> $GITHUB_ENV
@@ -116,8 +114,6 @@ jobs:
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:i386"
           echo "将拉取的$line i386架构镜像更名为 $new_image"
           docker tag $line $new_image
-          echo "将更名后的镜像$new_image 推送到阿里docker"
-          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "I386=${new_image}" >> $GITHUB_ENV
@@ -131,8 +127,6 @@ jobs:
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:arm64"
           echo "将拉取的$line arm64架构镜像更名为 $new_image"
           docker tag $line $new_image
-          echo "将更名后的镜像$new_image 推送到阿里docker"
-          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARM64=${new_image}" >> $GITHUB_ENV
@@ -146,8 +140,6 @@ jobs:
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:armv7"
           echo "将拉取的$line armv7架构镜像更名为 $new_image"
           docker tag $line $new_image
-          echo "将更名后的镜像$new_image 推送到阿里docker"
-          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARMV7=${new_image}" >> $GITHUB_ENV
@@ -161,8 +153,6 @@ jobs:
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:armv6"
           echo "将拉取的$line armv6架构镜像更名为 $new_image"
           docker tag $line $new_image
-          echo "将更名后的镜像$new_image 推送到阿里docker"
-          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARMV6=${new_image}" >> $GITHUB_ENV
@@ -176,8 +166,6 @@ jobs:
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:armv5"
           echo "将拉取的$line armv5架构镜像更名为 $new_image"
           docker tag $line $new_image
-          echo "将更名后的镜像$new_image 推送到阿里docker"
-          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARMV5=${new_image}" >> $GITHUB_ENV
@@ -191,8 +179,6 @@ jobs:
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:s390x"
           echo "将拉取的$line s390x架构镜像更名为 $new_image"
           docker tag $line $new_image
-          echo "将更名后的镜像$new_image 推送到阿里docker"
-          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "S390X=${new_image}" >> $GITHUB_ENV
