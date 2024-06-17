@@ -4,9 +4,45 @@ on:
   workflow_dispatch:
     inputs:
       image_name:
-        description: '请填写需要拉取docker-hub的架构 仓库名'
+        description: '请填写需要拉取hub.docker的仓库名'
         required: true
-        default: '--platform=linux/amd64 xiaoyaliu/alist:latest'
+        default: 'xiaoyaliu/alist:latest'
+      amd64:
+        description: '拉取x86_64架构'
+        required: true
+        default: true
+        type: boolean
+      i386:
+        description: '拉取i386架构'
+        required: true
+        default: false
+        type: boolean
+      arm64:
+        description: '拉取arm64架构'
+        required: true
+        default: false
+        type: boolean
+      armv7:
+        description: '拉取armv7架构'
+        required: true
+        default: false
+        type: boolean
+      armv6:
+        description: '拉取armv6架构'
+        required: true
+        default: false
+        type: boolean
+      armv5:
+        description: '拉取armv5架构'
+        required: true
+        default: false
+        type: boolean
+      s390x:
+        description: '拉取s390x架构'
+        required: true
+        default: false
+        type: boolean
+      
   
 env:
   #阿里云地址 例如 registry.**.aliyuncs.com
@@ -23,6 +59,15 @@ env:
 
   #输入的hub.docker仓库名
   line: "${{ github.event.inputs.image_name }}"
+  #输入的架构
+  amd64: "${{ github.event.inputs.amd64 }}"
+  i386: "${{ github.event.inputs.i386 }}"
+  arm64: "${{ github.event.inputs.arm64 }}"
+  armv7: "${{ github.event.inputs.armv7 }}"
+  armv6: "${{ github.event.inputs.armv6 }}"
+  armv5: "${{ github.event.inputs.armv5 }}"
+  s390x: "${{ github.event.inputs.s390x }}"
+  
 
 jobs:
 
@@ -32,13 +77,46 @@ jobs:
     - name: 设置 Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Check out code
-      uses: actions/checkout@v4
-         
+    - name: 设置工作流程目录
+      uses: actions/checkout@v4   #默认本仓库
+      
+    - name: 登录阿里docker
+      run: echo $ALIYUN_REGISTRY_PASSWORD | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin 
+
+    - name: 拉取x86_64架构
+      if: github.event.inputs.amd64 == 'true'
+      run: docker pull --platform=linux/amd64 $line
+
+    - name: 拉取386架构
+      if: github.event.inputs.i386 == 'true'
+      run: docker pull --platform=linux/386 $line
+
+    - name: 拉取arm64架构
+      if: github.event.inputs.arm64 == 'true'
+      run: docker pull --platform=linux/arm64 $line
+
+    - name: 拉取armv7架构
+      if: github.event.inputs.armv7 == 'true'
+      run: docker pull --platform=linux/arm/v7 $line
+
+    - name: 拉取armv6架构
+      if: github.event.inputs.armv7 == 'true'
+      run: docker pull --platform=linux/arm/v6 $line
+
+    - name: 拉取armv5架构
+      if: github.event.inputs.armv5 == 'true'
+      run: docker pull --platform=linux/arm/v5 $line
+
+    - name: 拉取s390x架构
+      if: github.event.inputs.s390x == 'true'
+      run: docker pull --platform=linux/s390x $line
+
     - name: Build and push image Aliyun
       run: |
-          docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
-          echo "docker pull $line"
+          #docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
+          
+          
+          echo "开始拉取hub.docker=======>>> $line"
           docker pull $line
           platform=$(echo "$line" | awk -F'--platform[ =]' '{if (NF>1) print $2}' | awk '{print $1}')
           echo "platform is $platform"
