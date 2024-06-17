@@ -90,17 +90,27 @@ jobs:
     - name: 登录阿里docker
       run: echo $ALIYUN_REGISTRY_PASSWORD | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin 
 
-    - name: 拉取x86_64架构
-      if: github.event.inputs.amd64 == 'true'
+    - name: 获取docker信息
       run: |
-          docker pull --platform=linux/amd64 $line
           # 获取输入仓库的镜像名:版本号  例如nginx:1.25.3
           image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
           # 获取镜像名例  例如nginx
           image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
+          image_tag=$(echo "$image_name_tag" | awk -F':' '{print $2}')
+          [[ -n "$aliname" ]] && image_name_tag="${aliname}:$image_tag"
+          [[ -n "$aliname" ]] && image_name=$aliname
+          echo "image_name_tag=${image_name_tag}" >> $GITHUB_ENV
+          echo "image_name=${image_name}" >> $GITHUB_ENV
+
+    - name: 拉取x86_64架构
+      if: github.event.inputs.amd64 == 'true'
+      run: |
+          docker pull --platform=linux/amd64 $line
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:amd64"
           echo "将拉取的$line x86_64架构镜像更名为 $new_image"
           docker tag $line $new_image
+          echo "将更名后的镜像$new_image 推送到阿里docker"
+          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "AMD64=${new_image}" >> $GITHUB_ENV
@@ -109,11 +119,11 @@ jobs:
       if: github.event.inputs.i386 == 'true'
       run: |
           docker pull --platform=linux/i386 $line
-          image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:i386"
           echo "将拉取的$line i386架构镜像更名为 $new_image"
           docker tag $line $new_image
+          echo "将更名后的镜像$new_image 推送到阿里docker"
+          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "I386=${new_image}" >> $GITHUB_ENV
@@ -122,11 +132,11 @@ jobs:
       if: github.event.inputs.arm64 == 'true'
       run: |
           docker pull --platform=linux/arm64 $line
-          image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:arm64"
           echo "将拉取的$line arm64架构镜像更名为 $new_image"
           docker tag $line $new_image
+          echo "将更名后的镜像$new_image 推送到阿里docker"
+          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARM64=${new_image}" >> $GITHUB_ENV
@@ -135,11 +145,11 @@ jobs:
       if: github.event.inputs.armv7 == 'true'
       run: |
           docker pull --platform=linux/arm/v7 $line
-          image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:armv7"
           echo "将拉取的$line armv7架构镜像更名为 $new_image"
           docker tag $line $new_image
+          echo "将更名后的镜像$new_image 推送到阿里docker"
+          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARMV7=${new_image}" >> $GITHUB_ENV
@@ -148,11 +158,11 @@ jobs:
       if: github.event.inputs.armv6 == 'true'
       run: |
           docker pull --platform=linux/arm/v6 $line
-          image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:armv6"
           echo "将拉取的$line armv6架构镜像更名为 $new_image"
           docker tag $line $new_image
+          echo "将更名后的镜像$new_image 推送到阿里docker"
+          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARMV6=${new_image}" >> $GITHUB_ENV
@@ -161,11 +171,11 @@ jobs:
       if: github.event.inputs.armv5 == 'true'
       run: |
           docker pull --platform=linux/arm/v5 $line
-          image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:armv5"
           echo "将拉取的$line armv5架构镜像更名为 $new_image"
           docker tag $line $new_image
+          echo "将更名后的镜像$new_image 推送到阿里docker"
+          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "ARMV5=${new_image}" >> $GITHUB_ENV
@@ -174,11 +184,11 @@ jobs:
       if: github.event.inputs.s390x == 'true'
       run: |
           docker pull --platform=linux/s390x $line
-          image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
           new_image="$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/${image_name}:s390x"
           echo "将拉取的$line s390x架构镜像更名为 $new_image"
           docker tag $line $new_image
+          echo "将更名后的镜像$new_image 推送到阿里docker"
+          docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
           echo "S390X=${new_image}" >> $GITHUB_ENV
@@ -186,13 +196,7 @@ jobs:
     - name: 合并多架构清单
       run: |
           #docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
-          # 获取输入仓库的镜像名:版本号  例如nginx:1.25.3
-          image_name_tag=$(echo "$line" | awk -F'/' '{print $NF}')
-          # 获取镜像名例  例如nginx
-          image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
-          image_tag=$(echo "$image_name_tag" | awk -F':' '{print $2}')
-          [[ -n "$aliname" ]] && image_name_tag="${aliname}:$image_tag"
-          [[ -n "$aliname" ]] && image_name=$aliname
+          
           echo "合并多架构清单:"
           echo "$AMD64"
           echo "$I386"
