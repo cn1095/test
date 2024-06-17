@@ -226,7 +226,6 @@ jobs:
           sudo rm -rf /home/runner/.docker/
           sudo rm -rf /root/.docker/
     - name: 上传
-      if: github.event.inputs.tar == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.image_name_tag }}
