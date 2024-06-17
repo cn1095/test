@@ -112,7 +112,7 @@ jobs:
           docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
-          docker -o /opt/out/${image_name_tag}_x86_64.tar $new_image
+          docker save $new_image /opt/out/${image_name_tag}_x86_64.tar
           echo "AMD64=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取386架构
@@ -126,7 +126,7 @@ jobs:
           docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
-          docker -o /opt/out/${image_name_tag}_i386.tar $new_image
+          docker save $new_image /opt/out/${image_name_tag}_i386.tar
           echo "I386=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取arm64架构
@@ -140,7 +140,7 @@ jobs:
           docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
-          docker -o /opt/out/${image_name_tag}_arm64.tar $new_image
+          docker save $new_image /opt/out/${image_name_tag}_arm64.tar 
           echo "ARM64=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取armv7架构
@@ -154,7 +154,7 @@ jobs:
           docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
-          docker -o /opt/out/${image_name_tag}_armv7.tar $new_image
+          docker save $new_image /opt/out/${image_name_tag}_armv7.tar 
           echo "ARMV7=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取armv6架构
@@ -168,7 +168,7 @@ jobs:
           docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
-          docker -o /opt/out/${image_name_tag}_armv6.tar $new_image
+          docker save $new_image /opt/out/${image_name_tag}_armv6.tar 
           echo "ARMV6=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取armv5架构
@@ -182,7 +182,7 @@ jobs:
           docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
-          docker -o /opt/out/${image_name_tag}_armv5.tar $new_image
+          docker save $new_image /opt/out/${image_name_tag}_armv5.tar
           echo "ARMV5=${new_image}" >> $GITHUB_ENV
 
     - name: 拉取s390x架构
@@ -196,7 +196,7 @@ jobs:
           docker push $new_image
           echo "清理本地镜像$line ..."
           docker rmi $line
-          docker -o /opt/out/${image_name_tag}_s390x.tar $new_image
+          docker save $new_image /opt/out/${image_name_tag}_s390x.tar
           echo "S390X=${new_image}" >> $GITHUB_ENV
 
     - name: 合并多架构清单
