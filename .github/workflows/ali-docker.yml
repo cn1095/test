@@ -4,11 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       image_name:
-        description: '请填写需要拉取hub.docker的仓库名镜像名版本号'
+        description: '请填写需要拉取hub.docker的仓库名镜像名版本号如xhofe/alist:latest'
         required: true
         default: 'xiaoyaliu/alist:latest'
+      aliname:
+        description: '自定义阿里docker镜像名（避免镜像名重复），默认跟随上方的镜像名如alist'
+        required: false
+        default: ''
       name:
-        description: '自定义阿里docker镜像的版本号，默认跟随上方的版本'
+        description: '自定义阿里docker镜像的版本号，默认跟随上方的版本如latest'
         required: false
         default: ''
       amd64:
@@ -64,6 +68,7 @@ env:
   #输入的hub.docker仓库名
   line: "${{ github.event.inputs.image_name }}"
   name: "${{ github.event.inputs.name }}"
+  aliname: "${{ github.event.inputs.aliname }}"
   #输入的架构
   amd64: "${{ github.event.inputs.amd64 }}"
   i386: "${{ github.event.inputs.i386 }}"
@@ -200,6 +205,8 @@ jobs:
           # 获取镜像名例  例如nginx
           image_name=$(echo "$image_name_tag" | awk -F':' '{print $1}')
           image_tag=$(echo "$image_name_tag" | awk -F':' '{print $2}')
+          [[ -n "$aliname" ]] && image_name_tag="${aliname}:$image_tag"
+          [[ -n "$aliname" ]] && image_name=$aliname
           echo "合并多架构清单:"
           echo "$AMD64"
           echo "$I386"
