@@ -18,6 +18,7 @@ jobs:
   - name: 获取id
     id: getid
     run: |
+         #查找test仓库 流程名字为A编译candy的 最后一次流程id值
           RUN_ID=$(gh run list \
             --repo "${{ github.repository_owner }}/test" \
             --workflow "A编译candy" \
@@ -36,25 +37,27 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          repository: lanthora/candy
-          ref: ${{ env.BRANCH }} #默认使用master分支
-          
-      - name: Print RUN_ID for debugging
-        run: |
-         echo "RUN_ID: ${{ needs.check.outputs.RUN_ID }}"
         
-      - name: Download amd64 binaries
+      - name: 下载x86
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.c8 }}
           name: candy-x86_64-linux-musl
           path: /opt/bin/candy-x86
           run-id: ${{ needs.check.outputs.RUN_ID }}
+          
+      - name: 下载arm64
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.c8 }}
+          name: candy-aarch64-linux-musl
+          path: /opt/bin/candy-arm64
+          run-id: ${{ needs.check.outputs.RUN_ID }}
 
-      - name: 查找
+      - name: 打包docker
         run: |
-          find /opt -name "candy*"
-          file /opt/bin/candy-x86
+          file /opt/bin/candy-x86/candy
+          file /opt/bin/candy-arm64/candy
+          #执行后续打包docker操作
 
 
