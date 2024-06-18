@@ -110,6 +110,8 @@ jobs:
             go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/tailscaled
             go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/derper
             mkdir -p /opt/bin
+            du -sh --block-size=M tailscaled | cut -f1
+            file tailscaled
             mv -f tailscale tailscaled derper /opt/bin/
       - name: 安装 UPX
         if: github.event.inputs.upx == 'true'
@@ -121,7 +123,6 @@ jobs:
         if: github.event.inputs.upx == 'true'
         run: |
           cd /opt/bin
-          file tailscaled
           upx --lzma --best tailscaled
           upx --lzma --best tailscale
           upx --lzma --best derper
