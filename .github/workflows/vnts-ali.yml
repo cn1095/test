@@ -39,8 +39,8 @@ jobs:
       - name: 构建发布
         run: |
          git clone https://github.com/lmq8267/vnts /opt/src
-         mv /opt/src/Dockerfile /opt/vnts/Dockerfile
-         cd /opt/vnts
+         mv /opt/src/Dockerfile /opt/vnt/Dockerfile
+         cd /opt/vnt
          echo $ALIYUN_REGISTRY_PASSWORD | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin 
          sudo docker buildx create --use
          sudo docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6 -t lmq8267/vntst:${{ env.tag }} . --push
