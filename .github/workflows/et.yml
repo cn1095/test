@@ -206,8 +206,20 @@ jobs:
     - name: 生成Dockerfile
       run: |
         cd /opt/et
-        mv easytier-core_aarch64-linux-musl 
-        mv easytier-cli_aarch64-linux-musl
+        mv easytier-core_aarch64-linux-musl easytier-core_arm64
+        mv easytier-cli_aarch64-linux-musl easytier-cli_arm64
+
+        mv easytier-core_x86_64-linux-musl easytier-core_amd64
+        mv easytier-cli_x86_64-linux-musl easytier-cli_amd64
+
+        mv easytier-core_i686-linux-musl easytier-core_386
+        mv easytier-cli_i686-linux-musl easytier-cli_386
+
+        mv easytier-core_armv7-linux-musleabi easytier-core_armv7
+        mv easytier-cli_armv7-linux-musleabi easytier-cli_armv7
+
+        mv easytier-core_arm-linux-musleabi easytier-core_armv6
+        mv easytier-cli_arm-linux-musleabi easytier-cli_armv6
         
         echo "FROM alpine:latest" > ./Dockerfile
         echo "ARG TARGETARCH" >> ./Dockerfile
@@ -217,3 +229,32 @@ jobs:
         echo "RUN chmod +x /usr/bin/easytier-core" >> ./Dockerfile
         echo "RUN chmod +x /usr/bin/easytier-cli" >> ./Dockerfile
         echo "ENTRYPOINT [\"/usr/bin/easytier-core\"]" >> ./Dockerfile
+    - name: Setup QEMU
+      uses: dbhi/qus/action@main
+    - name: 设置 Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+         username: lmq8267
+         password: ${{ secrets.DOCKER_TOKEN }}
+    - name: Build and Push Docker Latest Image
+      if: github.event.inputs.latest == 'true'
+      uses: docker/build-push-action@v5
+      with:
+         push: true
+         tags: |
+          lmq8267/easytier:${{ env.tags }}
+          lmq8267/easytier:latest
+         platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
+         context: /opt
+    - name: Build and Push Docker Image
+      if: github.event.inputs.latest == 'false'
+      uses: docker/build-push-action@v5 
+      with:
+         push: true
+         tags: |
+          lmq8267/easytier:${{ env.tags }}
+         platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
+         context: /opt
+        
