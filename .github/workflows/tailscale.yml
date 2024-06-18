@@ -41,9 +41,18 @@ env:
   target: "${{ github.event.inputs.target }}"
   name: "${{ github.event.inputs.name }}"
 jobs:
- build:
+ tailscale:
     runs-on: ubuntu-latest
     steps:
+      - name: 获取最新Go
+        run: |
+          latest_version=$(curl -L -k -s https://golang.org/dl/?mode=json | grep -m 1 -o '"version": "[^"]*' | sed 's/"version": "//' | tr -d 'go" ')
+          echo "go版本=$latest_version"
+          echo "gotag=$latest_version" >> $GITHUB_ENV
+      - name: 安装go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.gotag }}
       - name: 开始编译
         run: |
             git clone -b $branch https://github.com/tailscale/tailscale /opt/tailscale
