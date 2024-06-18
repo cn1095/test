@@ -3,7 +3,7 @@ name: vnts-阿里docker测试
 on:
   workflow_dispatch:
 env:
-  tag: "v1.2.9"
+  tag: 1.2.9.7
 jobs:
   build:
     runs-on: ubuntu-latest
