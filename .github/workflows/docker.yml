@@ -40,10 +40,7 @@ jobs:
       - name: Download amd64 binaries
         uses: actions/download-artifact@v4
         with:
-          name: candy-x86_64-linux-musl
-          path: /opt/bin/*
           github-token: ${{ secrets.c8 }}
-          repository: ${{ github.repository }}
           run-id: ${{ needs.getid.outputs.RUN_ID }}
 
       - name: 查找
