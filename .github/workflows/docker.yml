@@ -44,6 +44,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.c8 }}
+          name: candy-x86_64-linux-musl
+          path: candy-x86_64-linux-musl
           run-id: ${RUN_ID}
 
       - name: 查找
