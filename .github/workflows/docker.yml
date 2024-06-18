@@ -8,9 +8,31 @@ on:
       - completed
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+ check:
+  runs-on: ubuntu-latest
+  env:
+      GITHUB_TOKEN: ${{ secrets.c8 }}
+  outputs:
+      RUN_ID: ${{ steps.getid.outputs.RUN_ID }}
+  steps:
+  - name: 获取id
+    id: getid
+    run: |
+          RUN_ID=$(gh run list \
+            --repo "${{ github.repository_owner }}/test" \
+            --workflow "A编译candy" \
+            --json "status,conclusion,updatedAt,databaseId" \
+            --jq '[ .[] | select(.status=="completed") | select(.conclusion=="success") ] | max_by(.updatedAt) | .databaseId')
 
+          if [[ -z "${RUN_ID}" ]]; then
+            echo "无法获取到流程id"
+            false
+          fi
+
+          echo "RUN_ID=${RUN_ID}" >> $GITHUB_OUTPUT
+ build:
+    runs-on: ubuntu-latest
+    needs: check
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,6 +42,9 @@ jobs:
         with:
           name: candy-x86_64-linux-musl
           path: /opt/bin/candy
+          github-token: ${{ secrets.c8 }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.getid.outputs.RUN_ID }}
 
       - name: 查找
         run: |
