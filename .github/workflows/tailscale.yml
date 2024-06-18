@@ -50,7 +50,7 @@ jobs:
           echo "go版本=$latest_version"
           echo "gotag=$latest_version" >> $GITHUB_ENV
       - name: 安装go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.gotag }}
       - name: 开始编译
