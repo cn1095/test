@@ -36,6 +36,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          repository: lanthora/candy
+          ref: ${{ env.BRANCH }} #默认使用master分支
 
       - name: Download amd64 binaries
         uses: actions/download-artifact@v4
