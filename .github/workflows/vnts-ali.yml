@@ -54,7 +54,7 @@ jobs:
          cd /opt/vnt
          echo $ALIYUN_REGISTRY_PASSWORD | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin 
          sudo docker buildx create --use
-         sudo docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6 -t lmq8267/vntst:${{ env.tag }} . --push
-         sudo docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6 -t lmq8267/vntst . --push
+         sudo docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v5 -t lmq8267/vntst:${{ env.tag }} . --push
+         sudo docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v5 -t lmq8267/vntst . --push
          sudo rm -rf /home/runner/.docker/config.json
          sudo rm -rf /root/.docker/config.json
