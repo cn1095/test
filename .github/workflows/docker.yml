@@ -49,11 +49,12 @@ jobs:
         with:
           github-token: ${{ secrets.c8 }}
           name: candy-x86_64-linux-musl
-          path: candy-x86_64-linux-musl
+          path: /opt/bin/candy-x86
           run-id: ${{ needs.check.outputs.RUN_ID }}
 
       - name: 查找
         run: |
           find /opt -name "candy*"
+          file /opt/bin/candy-x86
 
 
