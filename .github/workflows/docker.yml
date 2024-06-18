@@ -41,7 +41,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.c8 }}
-          run-id: ${{ needs.getid.outputs.RUN_ID }}
+          run-id: ${RUN_ID}
 
       - name: 查找
         run: |
