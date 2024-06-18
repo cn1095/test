@@ -28,7 +28,7 @@ jobs:
             echo "无法获取到流程id"
             false
           fi
-
+          echo "获取到${{ github.repository_owner }}流程id=${RUN_ID}"
           echo "RUN_ID=${RUN_ID}" >> $GITHUB_OUTPUT
  build:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
           path: /opt/bin/candy
           github-token: ${{ secrets.c8 }}
           repository: ${{ github.repository }}
-          run-id: ${{ steps.getid.outputs.RUN_ID }}
+          run-id: ${{ needs.getid.outputs.RUN_ID }}
 
       - name: 查找
         run: |
