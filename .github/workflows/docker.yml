@@ -1,0 +1,27 @@
+name: 打包docker
+
+on:
+  workflow_run:
+    workflows: ["A编译candy"]
+    types:
+      - completed
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download amd64 binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: candy-x86_64-linux-musl
+          path: /opt/bin/*
+
+      - name: 查找
+        run: |
+          find /opt -name "candy*"
+
+
