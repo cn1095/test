@@ -239,22 +239,31 @@ jobs:
          username: lmq8267
          password: ${{ secrets.DOCKER_TOKEN }}
     - name: Build and Push Docker Latest Image
-      if: github.event.inputs.latest == 'true'
+      if: github.event.inputs.latest == 'true' && github.event.inputs.dockertag != ''
       uses: docker/build-push-action@v5
       with:
          push: true
          tags: |
-          lmq8267/easytier:${{ env.tags }}
+          lmq8267/easytier:${{ env.dockertag }}
           lmq8267/easytier:latest
          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
          context: /opt
     - name: Build and Push Docker Image
-      if: github.event.inputs.latest == 'false'
+      if: github.event.inputs.latest == 'false' && github.event.inputs.dockertag != ''
       uses: docker/build-push-action@v5 
       with:
          push: true
          tags: |
-          lmq8267/easytier:${{ env.tags }}
+          lmq8267/easytier:${{ env.dockertag }}
+         platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
+         context: /opt
+    - name: Build and Push Docker Image
+      if: github.event.inputs.latest == 'false' && github.event.inputs.dockertag == ''
+      uses: docker/build-push-action@v5 
+      with:
+         push: true
+         tags: |
+          lmq8267/easytier:latest
          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
          context: /opt
         
