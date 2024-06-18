@@ -9,7 +9,7 @@ on:
         default: 'main'
       name:
         description: '自定义版本号（即自定义 ./tailscaled -version 所显示的版本信息）'
-        required: true
+        required: false
         default: ''
       target:
         description: '请选择linux目标CPU架构'
@@ -97,9 +97,9 @@ jobs:
                 ;;
             esac
             version=$(cat ./VERSION.txt)
-            go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version}' -s -w" tailscale.com/cmd/tailscale
-            go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version}' -s -w" tailscale.com/cmd/tailscaled
-            go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version}' -s -w" tailscale.com/cmd/derper
+            go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/tailscale
+            go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/tailscaled
+            go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/derper
             mkdir -p /opt/bin
             mv -f tailscale tailscaled derper /opt/bin/
       - name: 安装 UPX
