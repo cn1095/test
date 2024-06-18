@@ -1,63 +1,117 @@
-name: 打包docker
+name: 测试
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["A编译candy"]
-    types:
-      - completed
+    inputs:
+      tag:
+        description: '请填写构建CANDY的lanthora/candy分支或提交记录，默认主分支master'
+        required: true
+        default: 'master'
+      strip:
+        description: '使用strip剥离二进制程序以减少体积'
+        required: true
+        default: true
+        type: boolean
+      upx:
+        description: '使用upx压缩二进制程序以最大化减少体积'
+        required: true
+        default: false
+        type: boolean
+env:
+  BRANCH: "${{ github.event.inputs.tag }}"
 
 jobs:
- check:
-  runs-on: ubuntu-latest
-  env:
-      GITHUB_TOKEN: ${{ secrets.c8 }}
-  outputs:
-      RUN_ID: ${{ steps.getid.outputs.RUN_ID }}
-  steps:
-  - name: 获取id
-    id: getid
-    run: |
-         #查找test仓库 流程名字为A编译candy的 最后一次流程id值
-          RUN_ID=$(gh run list \
-            --repo "${{ github.repository_owner }}/test" \
-            --workflow "A编译candy" \
-            --json "status,conclusion,updatedAt,databaseId" \
-            --jq '[ .[] | select(.status=="completed") | select(.conclusion=="success") ] | max_by(.updatedAt) | .databaseId')
-
-          if [[ -z "${RUN_ID}" ]]; then
-            echo "无法获取到流程id"
-            false
-          fi
-          echo "获取到${{ github.repository_owner }}流程id=${RUN_ID}"
-          echo "RUN_ID=${RUN_ID}" >> $GITHUB_OUTPUT
- build:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - TARGET: aarch64-linux-musl
+            OPENSSL_TARGET: linux-aarch64
+          - TARGET: armv7l-linux-musleabihf
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: armv7m-linux-musleabi
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: arm-linux-musleabi
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: arm-linux-musleabihf
+            OPENSSL_TARGET: linux-armv4
+          - TARGET: mipsel-linux-muslsf
+            OPENSSL_TARGET: linux-mips32
+          - TARGET: mips-linux-muslsf
+            OPENSSL_TARGET: linux-mips32
+          - TARGET: i686-linux-musl
+            OPENSSL_TARGET: linux-generic32
+          - TARGET: x86_64-linux-musl
+            OPENSSL_TARGET: linux-x86_64
     runs-on: ubuntu-latest
-    needs: check
+    env:
+      OPENSSL_TARGET: ${{ matrix.OPENSSL_TARGET }}
+      TARGET: ${{ matrix.TARGET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: 下载x86
-        uses: actions/download-artifact@v4
         with:
-          github-token: ${{ secrets.c8 }}
-          name: candy-x86_64-linux-musl
-          path: /opt/bin/candy-x86
-          run-id: ${{ needs.check.outputs.RUN_ID }}
-          
-      - name: 下载arm64
-        uses: actions/download-artifact@v4
+          repository: lanthora/candy
+          ref: ${{ env.BRANCH }} #默认使用master分支
+      - name: Install UPX
+        uses: crazy-max/ghaction-upx@v3
         with:
-          github-token: ${{ secrets.c8 }}
-          name: candy-aarch64-linux-musl
-          path: /opt/bin/candy-arm64
-          run-id: ${{ needs.check.outputs.RUN_ID }}
-
-      - name: 打包docker
+          version: latest
+          install-only: true
+      - name: 下载编译工具链
         run: |
-          file /opt/bin/candy-x86/candy
-          file /opt/bin/candy-arm64/candy
-          #执行后续打包docker操作
+          mkdir -p /opt/musl_gcc 
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          wget -q -c https://musl.cc/${{ env.TARGET }}-cross.tgz -P /opt/musl_gcc/
+          tar zxf /opt/musl_gcc/${{ env.TARGET }}-cross.tgz -C /opt/musl_gcc/
+      - name: 编译candy
+        run: |
+          echo "##########################编译candy二进制#################################"
+          export PATH=/opt/musl_gcc/${{ env.TARGET }}-cross/bin:$PATH
+          export CC=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-gcc
+          export CXX=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-g++
+          export AR=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ar
+          export LD=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ld
+          export RANLIB=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ranlib
+          export STRIP=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-strip
+          export CFLAGS="-I /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/include -L /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/lib"
+          export LDFLAGS="-static $CFLAGS"
 
-
+          cmake -DCANDY_STATIC=1 -DTARGET_OPENSSL=$OPENSSL_TARGET -DCMAKE_BUILD_TYPE=Release .
+          make -j$(nproc)
+          ls ./src/main
+          file ./src/main/candy
+          mkdir -p /opt/bin
+          cp -rf ./candy.cfg /opt/bin/candy.cfg
+          cp -rf ./src/main/candy /opt/bin/candy-${{ env.TARGET }}
+          ls -alh /opt/bin/candy-${{ env.TARGET }}
+      - name: 剥离candy
+        if: github.event.inputs.strip == 'true'
+        run: |
+          cd /opt/bin
+          /opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-strip /opt/bin/candy-${{ env.TARGET }}
+          file ./candy-${{ env.TARGET }}
+          ls -alh /opt/bin/candy-${{ env.TARGET }}
+      - name: 压缩candy
+        if: github.event.inputs.upx == 'true'
+        run: |
+          cd /opt/bin
+          upx --lzma --best candy-${{ env.TARGET }}
+          ls -alh /opt/bin/candy-${{ env.TARGET }}
+          #tar -czvf candy-${{ env.TARGET }}.tar.gz candy-${{ env.TARGET }} candy.cfg
+      - name: 上传
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: candy-${{ env.TARGET }}
+          path: /opt/bin/*
+  download:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: 下载arm64
+      uses: actions/download-artifact@v4
+      with:
+        merge-multiple: true
+    - run: ls 
