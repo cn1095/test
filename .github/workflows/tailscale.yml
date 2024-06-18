@@ -106,6 +106,7 @@ jobs:
                 ;;
             esac
             version=$(cat ./VERSION.txt)
+            echo "${version} ${name}"
             go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/tailscale
             go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/tailscaled
             go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/derper
