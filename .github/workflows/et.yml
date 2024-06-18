@@ -1,0 +1,219 @@
+name: 编译easytier
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '请填写构建easytier的EasyTier/EasyTier分支或版本号，默认主分支main'
+        required: true
+        default: 'main'
+      upx:
+        description: '使用upx压缩二进制程序以最大化减少体积'
+        required: true
+        default: true
+        type: boolean
+      dockertag:
+        description: '请填写打包镜像的版本号'
+        required: false
+        default: ''
+      latest:
+        description: '是否打包成最新latest镜像'
+        required: true
+        default: true
+        type: boolean
+
+env:
+  BRANCHES: "${{ github.event.inputs.tag }}"
+  dockertag: "${{ github.event.inputs.dockertag }}"
+  CARGO_TERM_COLOR: always
+  TZ: Asia/Shanghai
+  
+jobs:
+ build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - TARGET: aarch64-unknown-linux-musl
+            URL: aarch64-linux-musl
+            NAME: aarch64-linux-musl
+            
+          - TARGET: mips-unknown-linux-musl
+            URL: mips-linux-muslsf
+            NAME: mips-linux-muslsf
+            
+          - TARGET: mipsel-unknown-linux-musl
+            URL: mipsel-linux-muslsf
+            NAME: mipsel-linux-muslsf
+            
+          - TARGET: arm-unknown-linux-musleabi
+            URL: arm-linux-musleabi
+            NAME: arm-linux-musleabi
+            
+          - TARGET: arm-unknown-linux-musleabihf
+            URL: arm-linux-musleabihf
+            NAME: arm-linux-musleabihf
+            
+          - TARGET: armv7-unknown-linux-musleabi
+            URL: armv7m-linux-musleabi
+            NAME: armv7-linux-musleabi
+
+          - TARGET: armv7-unknown-linux-musleabihf
+            URL: armv7l-linux-musleabihf
+            NAME: armv7-linux-musleabihf
+            
+          - TARGET: i686-unknown-linux-musl
+            URL: i686-linux-musl
+            NAME: i686-linux-musl
+            
+          - TARGET: x86_64-unknown-linux-musl
+            URL: x86_64-linux-musl
+            NAME: x86_64-linux-musl
+            
+    runs-on: ubuntu-latest
+    env:
+      TARGET: ${{ matrix.TARGET }}
+      URL: ${{ matrix.URL }}
+      NAME: ${{ matrix.NAME }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: 下载编译工具
+        run: |
+          mkdir -p /opt/musl_gcc
+          rustup set auto-self-update disable
+          rustup install 1.75
+          rustup default 1.75
+          
+          wget -q -c https://musl.cc/${{ env.URL }}-cross.tgz -P /opt/musl_gcc/
+          tar zxf /opt/musl_gcc/${{ env.URL }}-cross.tgz -C /opt/musl_gcc/
+          sudo ln -s /opt/musl_gcc/${{ env.URL }}-cross/bin/*gcc /usr/bin/
+          sudo apt-get update && sudo apt-get install -qq crossbuild-essential-arm64 crossbuild-essential-armhf musl-tools protobuf-compiler
+          if [[ $TARGET =~ ^mips.*$ ]]; then
+            cd /opt/musl_gcc/${{ env.URL }}-cross/lib/gcc/${{ env.URL }}/11.2.1 || exit 255
+            cp libgcc_eh.a libunwind.a
+            ar x libgcc.a _ctzsi2.o _clz.o _bswapsi2.o
+            ar rcs libctz.a _ctzsi2.o _clz.o _bswapsi2.o
+
+            rustup toolchain install nightly-x86_64-unknown-linux-gnu
+            rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
+          else
+            rustup target add ${{ env.TARGET }}
+          fi
+
+          #添加交叉编译配置
+          cat >>~/.cargo/config <<EOF
+          [target.x86_64-unknown-linux-musl]
+          linker = "rust-lld"
+          rustflags = ["-C", "linker-flavor=ld.lld"]
+          
+          [target.i686-unknown-linux-musl]
+          linker = "i686-linux-musl-gcc"
+          rustflags = ["-C", "target-feature=+crt-static"] 
+          
+          [target.aarch64-unknown-linux-musl]
+          linker = "aarch64-linux-musl-gcc"
+          rustflags = ["-C", "target-feature=+crt-static"]
+          
+          [target.armv7-unknown-linux-musleabi]
+          linker = "armv7m-linux-musleabi-gcc"
+          rustflags = ["-C", "target-feature=+crt-static"]
+
+          [target.armv7-unknown-linux-musleabihf]
+          linker = "armv7l-linux-musleabihf-gcc"
+          rustflags = ["-C", "target-feature=+crt-static"]
+          
+          [target.arm-unknown-linux-musleabi]
+          linker = "arm-linux-musleabi-gcc"
+          rustflags = ["-C", "target-feature=+crt-static",
+          "-L", "/opt/musl_gcc/arm-linux-musleabi-cross/arm-linux-musleabi/lib",
+          "-L", "/opt/musl_gcc/arm-linux-musleabi-cross/lib/gcc/arm-linux-musleabi/11.2.1",
+          "-l", "atomic"]
+
+          [target.arm-unknown-linux-musleabihf]
+          linker = "arm-linux-musleabihf-gcc"
+          rustflags = ["-C", "target-feature=+crt-static",
+          "-L", "/opt/musl_gcc/arm-linux-musleabihf-cross/arm-linux-musleabihf/lib",
+          "-L", "/opt/musl_gcc/arm-linux-musleabihf-cross/lib/gcc/arm-linux-musleabihf/11.2.1",
+          "-l", "atomic"]
+          
+          [target.mipsel-unknown-linux-musl]
+          linker = "mipsel-linux-muslsf-gcc"
+          rustflags = ["-C", "target-feature=+crt-static",
+          "-L", "/opt/musl_gcc/mipsel-linux-muslsf-cross/mipsel-linux-muslsf/lib",
+          "-L", "/opt/musl_gcc/mipsel-linux-muslsf-cross/lib/gcc/mipsel-linux-muslsf/11.2.1",
+          "-l", "atomic",
+          "-l", "ctz"]
+          
+          [target.mips-unknown-linux-musl]
+          linker = "mips-linux-muslsf-gcc"
+          rustflags = ["-C", "target-feature=+crt-static",
+          "-L", "/opt/musl_gcc/mips-linux-muslsf-cross/mips-linux-muslsf/lib",
+          "-L", "/opt/musl_gcc/mips-linux-muslsf-cross/lib/gcc/mips-linux-muslsf/11.2.1",
+          "-l", "atomic",
+          "-l", "ctz"]      
+          EOF
+      - name: 安装 UPX
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          version: latest
+          install-only: true
+      - name: 编译
+        run: |
+          tagg=${{ env.BRANCHES }}
+          [[ -z $tagg ]] && tagg=main
+          git clone -b ${{ env.BRANCHES }} https://github.com/EasyTier/EasyTier /opt/et
+          cd /opt/et
+          mkdir -p /opt/bin
+          
+          if [[ $TARGET =~ ^mips.*$ ]]; then
+             cargo +nightly build -r --target ${{ env.TARGET }} -Z build-std=std,panic_abort --no-default-features --features mips
+          else
+             cargo build --release --target ${{ env.TARGET }}
+          fi
+          
+          /opt/musl_gcc/${{ env.URL }}-cross/bin/${{ env.URL }}-strip ./target/${{ env.TARGET }}/release/easytier-core
+          /opt/musl_gcc/${{ env.URL }}-cross/bin/${{ env.URL }}-strip ./target/${{ env.TARGET }}/release/easytier-cli
+          echo "build_time=$(TZ=UTC-8 date +%Y-%m-%d' '%H:%M:%S)" >> $GITHUB_ENV
+          echo "tags=$(date '+%Y%m%d')" >> $GITHUB_ENV
+      - name: 压缩
+        if: github.event.inputs.upx != 'false'
+        run: |
+          upx --lzma --best /opt/et/target/${{ env.TARGET }}/release/easytier-core
+          upx --lzma --best /opt/et/target/${{ env.TARGET }}/release/easytier-cli
+      - name: 打包
+        run: |
+          cd /opt/et/target/${{ env.TARGET }}/release
+          file easytier-core
+          #tar -czvf easytier-${{ env.NAME }}.tar.gz easytier-core easytier-cli
+          cp -f ./easytier-core /opt/bin/easytier-core_${{ env.NAME }}
+          cp -f ./easytier-cli /opt/bin/easytier-cli_${{ env.NAME }}
+      - name: 上传
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: easytier-${{ env.NAME }}
+          path: /opt/bin/*
+ download:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: 下载所有架构文件
+      uses: actions/download-artifact@v4
+      with:
+        merge-multiple: true
+        path: /opt/et
+        
+    - name: 生成Dockerfile
+      run: |
+        cd /opt/et
+        mv easytier-core_aarch64-linux-musl 
+        mv easytier-cli_aarch64-linux-musl
+        
+        echo "FROM alpine:latest" > ./Dockerfile
+        echo "ARG TARGETARCH" >> ./Dockerfile
+        echo "ARG TARGETVARIANT" >> ./Dockerfile
+        echo "ADD easytier-core_\$TARGETARCH\$TARGETVARIANT /usr/bin/easytier-core" >> ./Dockerfile
+        echo "ADD easytier-cli_\$TARGETARCH\$TARGETVARIANT /usr/bin/easytier-cli" >> ./Dockerfile 
+        echo "RUN chmod +x /usr/bin/easytier-core" >> ./Dockerfile
+        echo "RUN chmod +x /usr/bin/easytier-cli" >> ./Dockerfile
+        echo "ENTRYPOINT [\"/usr/bin/easytier-core\"]" >> ./Dockerfile
