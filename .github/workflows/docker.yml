@@ -110,8 +110,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: 下载arm64
+    - name: 下载所有架构文件
       uses: actions/download-artifact@v4
       with:
         merge-multiple: true
-    - run: ls 
+        
+    - name: 打包成镜像
+      run: ls 
