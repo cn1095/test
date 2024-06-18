@@ -110,9 +110,9 @@ jobs:
             go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/tailscaled
             go build -ldflags="-X 'tailscale.com/version.Long=${version} ${name}' -X 'tailscale.com/version.Short=${version} ${name}' -s -w" tailscale.com/cmd/derper
             mkdir -p /opt/bin
-            echo "tailscale ：`ls -alh tailscaled | awk '{print $5}'`"
-            echo "tailscaled ：`ls -alhtailscaled | awk '{print $5}'`"
-            echo "derper ：`ls -alhtailscaled | awk '{print $5}'`"
+            echo "tailscale ：`du -sh --block-size=M tailscale | cut -f1`"
+            echo "tailscaled ：`du -sh --block-size=M tailscaled | cut -f1`"
+            echo "derper ：`du -sh --block-size=M derper | cut -f1`"
             file tailscaled
             mv -f tailscale tailscaled derper /opt/bin/
       - name: 安装 UPX
