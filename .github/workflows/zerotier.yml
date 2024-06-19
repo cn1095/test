@@ -171,8 +171,8 @@ jobs:
             mv -f zerotier-one /opt/bin/
             cd /opt/bin
             $STRIP ./zerotier-one
-            ln -sf zerotier-one zerotier-idtool
-            ln -sf zerotier-one zerotier-cli
+            #ln -sf zerotier-one zerotier-idtool
+            #ln -sf zerotier-one zerotier-cli
             
       - name: 安装 UPX
         if: github.event.inputs.upx == 'true'
