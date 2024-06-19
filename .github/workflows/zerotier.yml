@@ -138,7 +138,7 @@ jobs:
             echo -e "\n\033[42;31;5;1m 开始解压${TARGET}-cross工具链.. \n\033[0m"
             tar -xf /opt/musl_gcc/${TARGET}-cross.tgz -C /opt/musl_gcc/
             echo -e "\n\033[42;31;5;1m 查看${TARGET}-gcc信息 \n\033[0m"
-            /opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-gcc 
+            /opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-gcc -v
 
       - name: 开始编译zerotier
         run: |
