@@ -159,7 +159,6 @@ jobs:
             export OPENSSL_DIR=/opt/openssl
             echo -e "\n\033[42;31;5;1m 开始编译... \n\033[0m"
             CC=${TARGET}-gcc \
-            CXX=${TARGET}-g++ \
             STRIP=${TARGET}-strip \
             ZT_STATIC=1 \
             OSTYPE="Linux" \
