@@ -141,22 +141,12 @@ jobs:
             /opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-gcc -v
             sudo timedatectl set-timezone "Asia/Shanghai"
 
-      - name: 编译arm64的openssl依赖
-        if: github.event.inputs.target == 'aarch64'
-        run: |
-            git clone --recursive https://github.com/openssl/openssl /opt/ssl
-            cd /opt/ssl
-            export PATH=$PATH:/opt/musl_gcc/${TARGET}-cross/bin
-            export CC=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-gcc
-            ./Configure linux-aarch64 no-shared no-tests no-asm --prefix=/opt/openssl no-ssl2 no-gost no-heartbeats no-err no-unit-test no-aria no-sm2 no-sm3 no-sm4 no-zlib no-afalgeng no-async
-            make -j$(nproc)
-            make install
-            
       - name: 开始编译zerotier
         run: |
             cd /opt/zerotier
             version=$(cat ./zerotier-one.spec | awk -F'Version:' 'NR==2 {print $2}' | tr -d ' ')
             echo "version=_${version}" >> $GITHUB_ENV
+            sed -i '/ZT_SSO_SUPPORTED=1/d' ./make-linux.mk
             
             export PATH=$PATH:/opt/musl_gcc/${TARGET}-cross/bin
             export CORSS_PREFI=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-
