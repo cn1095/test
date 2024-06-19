@@ -146,7 +146,8 @@ jobs:
             cd /opt/zerotier
             version=$(cat ./zerotier-one.spec | awk -F'Version:' 'NR==2 {print $2}' | tr -d ' ')
             echo "version=_${version}" >> $GITHUB_ENV
-            sed -i '/ZT_SSO_SUPPORTED=1/d' ./make-linux.mk
+            sed -i 's|armv7ve|armv7m|g' ./make-linux.mk
+            
             
             export PATH=$PATH:/opt/musl_gcc/${TARGET}-cross/bin
             export CORSS_PREFI=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-
