@@ -131,7 +131,7 @@ jobs:
                 TARGET=s390x-linux-musl
                 ;;
             esac
-            echo "TARGET=$TARGET" >> $GITHU
+            echo "TARGET=$TARGET" >> $GITHUB_ENV
             mkdir -p /opt/musl_gcc 
             echo -e "\n\033[42;31;5;1m 开始下载${TARGET}-cross工具链.. \n\033[0m"
             wget -q -c https://musl.cc/${TARGET}-cross.tgz -P /opt/musl_gcc/
@@ -144,7 +144,7 @@ jobs:
         run: |
             cd /opt/zerotier
             version=$(cat ./zerotier-one.spec | awk -F'Version:' 'NR==2 {print $2}' | tr -d ' ')
-            echo "version='_${version}'" >> $GITHU
+            echo "version='_${version}'" >> $GITHUB_ENV
 
             export PTAH=$PATH:/opt/musl_gcc/${TARGET}-cross/bin
             export CC=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-gcc
