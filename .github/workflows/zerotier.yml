@@ -159,7 +159,7 @@ jobs:
             CC=${TARGET}-gcc \
             STRIP=${TARGET}-strip \
             ZT_STATIC=1 \
-            ZT_EMBEDDED=1 \
+            ZT_EMBEDDED=0 \
             ZT_SSO_SUPPORTED=0 \
             DEFS="" \
             OSTYPE="Linux" \
