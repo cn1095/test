@@ -84,30 +84,41 @@ jobs:
             
       - name: 下载编译工具链
         run: |
+            cd /opt/zerotier
+            sed -i 's|override CFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -mno-unaligned-access|override CFLAGS+=-mfloat-abi=soft -msoft-float -mno-unaligned-access -marm|g' ./make-linux.mk
+            sed -i 's|override CXXFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -fexceptions -mno-unaligned-access|override CXXFLAGS+=-mfloat-abi=soft -msoft-float -fexceptions -mno-unaligned-access -marm|g' ./make-linux.mk
             case $target in 
               aarch64)
                 TARGET=aarch64-linux-musl
                 ;;
               armv7m-eabi)
                 TARGET=armv7m-linux-musleabi
+                sed -i 's|override CFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -mno-unaligned-access|override CFLAGS+=-mfloat-abi=soft -msoft-float -mno-unaligned-access -marm|g' ./make-linux.mk
+                sed -i 's|override CXXFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -fexceptions -mno-unaligned-access|override CXXFLAGS+=-mfloat-abi=soft -msoft-float -fexceptions -mno-unaligned-access -marm|g' ./make-linux.mk
                 ;;
               armv7l-eabihf)
                 TARGET=armv7l-linux-musleabihf
                 ;;
               armv6-eabi)
                 TARGET=armv6-linux-musleabi
+                sed -i 's|override CFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -mno-unaligned-access|override CFLAGS+=-mfloat-abi=soft -msoft-float -mno-unaligned-access -marm|g' ./make-linux.mk
+                sed -i 's|override CXXFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -fexceptions -mno-unaligned-access|override CXXFLAGS+=-mfloat-abi=soft -msoft-float -fexceptions -mno-unaligned-access -marm|g' ./make-linux.mk
                 ;;
               armv6-eabihf)
                 TARGET=armv6-linux-musleabihf
                 ;;
               armv5l-eabi)
                 TARGET=armv5l-linux-musleabi
+                sed -i 's|override CFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -mno-unaligned-access|override CFLAGS+=-mfloat-abi=soft -msoft-float -mno-unaligned-access -marm|g' ./make-linux.mk
+                sed -i 's|override CXXFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -fexceptions -mno-unaligned-access|override CXXFLAGS+=-mfloat-abi=soft -msoft-float -fexceptions -mno-unaligned-access -marm|g' ./make-linux.mk
                 ;;
               armv5l-eabihf)
                 TARGET=armv5l-linux-musleabihf
                 ;;
               arm-eabi)
                 TARGET=arm-linux-musleabi
+                sed -i 's|override CFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -mno-unaligned-access|override CFLAGS+=-mfloat-abi=soft -msoft-float -mno-unaligned-access -marm|g' ./make-linux.mk
+                sed -i 's|override CXXFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -fexceptions -mno-unaligned-access|override CXXFLAGS+=-mfloat-abi=soft -msoft-float -fexceptions -mno-unaligned-access -marm|g' ./make-linux.mk
                 ;;
               arm-eabihf)
                 TARGET=arm-linux-musleabihf
@@ -147,7 +158,7 @@ jobs:
             version=$(cat ./zerotier-one.spec | awk -F'Version:' 'NR==2 {print $2}' | tr -d ' ')
             echo "version=_${version}" >> $GITHUB_ENV
             sed -i 's|armv7ve|armv7m|g' ./make-linux.mk
-            
+            sed -i 's|CC_MACH),armel|CC_MACH),armv5l|g' ./make-linux.mk
             
             export PATH=$PATH:/opt/musl_gcc/${TARGET}-cross/bin
             export CORSS_PREFI=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-
