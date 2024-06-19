@@ -153,15 +153,12 @@ jobs:
             export LD=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-ld
             export AR=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-ar
             export STRIP=/opt/musl_gcc/${TARGET}-cross/bin/${TARGET}-strip
-            export CFLAGS="-I /opt/musl_gcc/${TARGET}-cross/${TARGET}/include -L /opt/musl_gcc/${TARGET}-cross/${TARGET}/lib -Wl,--gc-sections -Os -ffunction-sections -fdata-sections -D_GNU_SOURCE -D_BSD_SOURCE -fPIE"
+            export CFLAGS="-I /opt/musl_gcc/${TARGET}-cross/${TARGET}/include -L /opt/musl_gcc/${TARGET}-cross/${TARGET}/lib -Wl,--gc-sections -Os -ffunction-sections -fdata-sections -fPIE"
             export CXXFLAGS="$CFLAGS"
             echo -e "\n\033[42;31;5;1m 开始编译... \n\033[0m"
             CC=${TARGET}-gcc \
             STRIP=${TARGET}-strip \
             ZT_STATIC=1 \
-            ZT_EMBEDDED=0 \
-            ZT_SSO_SUPPORTED=0 \
-            DEFS="" \
             OSTYPE="Linux" \
             make -j$(nproc)
             mkdir -p /opt/bin
