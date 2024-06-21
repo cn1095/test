@@ -107,7 +107,7 @@ jobs:
             esac
             version=$(cat ./VERSION.txt)
             go build -ldflags="-X 'tailscale.com/version.longStamp=${version} ${name}' -X 'tailscale.com/version.shortStamp=${version} ${name}' -s -w" tailscale.com/cmd/tailscale
-            go build -ldflags="-X 'tailscale.com/version.longStamp=${version} ${name}' -X 'tailscale.com/version.shortStamp=${version} ${name}' -X tailscale.com/version.gitCommitStamp= -X tailscale.com/version.extraGitCommitStamp= -s -w" tailscale.com/cmd/tailscaled
+            go build -ldflags="-X 'tailscale.com/version.longStamp=${version} ' -X 'tailscale.com/version.shortStamp=${version} ${name}' -X tailscale.com/version.gitCommitStamp='' -X tailscale.com/version.extraGitCommitStamp='' -s -w" tailscale.com/cmd/tailscaled
             go build -ldflags="-X 'tailscale.com/version.longStamp=${version} ${name}' -X 'tailscale.com/version.shortStamp=${version} ${name}' -s -w" tailscale.com/cmd/derper
             mkdir -p /opt/bin
             echo "tailscale ：`du -sh --block-size=M tailscale | cut -f1`"
