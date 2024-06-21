@@ -125,7 +125,6 @@ jobs:
             echo "tailscaled ：`ls -alh tailscaled | awk '{print $5}'`"
             echo "derper ：`ls -alh derper | awk '{print $5}'`"
             file tailscaled
-            ./tailscaled -version
             mv -f tailscale tailscaled derper /opt/bin/
       - name: 安装 UPX
         if: github.event.inputs.upx == 'true'
