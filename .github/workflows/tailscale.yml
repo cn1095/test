@@ -114,6 +114,7 @@ jobs:
             echo "tailscaled ：`du -sh --block-size=M tailscaled | cut -f1`"
             echo "derper ：`du -sh --block-size=M derper | cut -f1`"
             file tailscaled
+            ./tailscaled -version
             mv -f tailscale tailscaled derper /opt/bin/
       - name: 安装 UPX
         if: github.event.inputs.upx == 'true'
