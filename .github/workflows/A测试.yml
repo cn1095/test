@@ -12,11 +12,19 @@ jobs:
       with:
         repository: lbl8603/vnts
         ref: master #默认使用master分支
-    - name: Build-musl
-      uses: gmiam/rust-musl-action@master
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
       with:
-        args: cargo build --release  --target mipsel-unknown-linux-musl --features normal,web
+        toolchain: stable
+        target: mipsel-unknown-linux-uclibc
+        override: true
+
+    - name: Install cross
+      run: cargo install cross
+
+    - name: Cross build
+      run: cross build --release --target mipsel-unknown-linux-uclibc --features normal,web
     - uses: actions/upload-artifact@v4
       with:
         name: vnts
-        path: target/mipsel-unknown-linux-musl/release/vnts
+        path: target/mipsel-unknown-linux-uclibc/release/vnts
