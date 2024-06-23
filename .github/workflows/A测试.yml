@@ -1,0 +1,22 @@
+name: Rust-static-build
+on:
+  workflow_dispatch:
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        repository: lbl8603/vnts
+        ref: master #默认使用master分支
+    - name: Build-musl
+      uses: gmiam/rust-musl-action@master
+      with:
+        args: cargo build --release  --target mipsel-unknown-linux-musl --features normal,web
+    - uses: actions/upload-artifact@v4
+      with:
+        name: vnts
+        path: target/mipsel-unknown-linux-musl/release/vnts
