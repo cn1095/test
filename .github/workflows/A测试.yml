@@ -12,18 +12,15 @@ jobs:
       with:
         repository: lbl8603/vnts
         ref: master #默认使用master分支
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
+    - name: 下载gcc
+      uses: lmq8267/dl-musl@main
       with:
         toolchain: stable
         target: mipsel-unknown-linux-musl
-        override: true
 
-    - name: Install cross
-      run: cargo install cross
+    - name: test
+      run: $CC -v
 
-    - name: Cross build
-      run: cross build --release --target mipsel-unknown-linux-musl --features normal,web
     - uses: actions/upload-artifact@v4
       with:
         name: vnts
