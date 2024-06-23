@@ -16,7 +16,7 @@ jobs:
       uses: lmq8267/dl-musl@main
       with:
         toolchain: stable
-        target: mipsel-unknown-linux-musl
+        target: aarch64-linux-musl
 
     - name: test
       run: $CC -v
