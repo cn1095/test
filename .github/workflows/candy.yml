@@ -67,7 +67,7 @@ jobs:
       - name: 编译candy
         run: |
           echo "##########################编译candy二进制#################################"
-          sudo apt-get update && sudo apt-get install cmake
+
           cmake -DCANDY_STATIC=1 -DTARGET_OPENSSL=$OPENSSL_TARGET -DCMAKE_BUILD_TYPE=Release .
           make -j$(nproc)
           ls ./src/main
