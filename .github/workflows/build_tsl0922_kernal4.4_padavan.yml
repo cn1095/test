@@ -316,7 +316,7 @@ jobs:
         #sed -i '/自定义项/d' .config
         #echo "自定义项=y" >> .config
         sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${{ github.event.inputs.firmwarever }}/g" ./versions.inc
-        echo '更新版本号时间'
+        echo '更新版本号时间${{ github.event.inputs.firmwarever }}'
         #########################################################################################
     - name: 开始编译
       run: |
@@ -331,7 +331,7 @@ jobs:
         sed -i "s/5.5.0/5.16.1/g" ./trunk/user/v2ray/Makefile
         sed -i "s/b9110ff10d87b245efd42b5a93beb4a3e5138fcfe92d09cadfb6a72cc4e1c91c/skip/g" ./trunk/user/v2ray/Makefile
         
-        sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
+        sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl -j$(nproc)
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: 打包命名固件
       id: organize
