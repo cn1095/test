@@ -1,4 +1,4 @@
-name: 编译tsl0922-Padavan-4.4内核
+name: 编译tsl0922-Padavan-4.4
 
 on:
   workflow_dispatch:
@@ -37,15 +37,15 @@ on:
         - Xiaoyu_C3
         - Xiaoyu_C5
         - ZTE_E8820S
-        default: Youhua_WR1200JS
+        default: Phicomm_K2P
       plugins:
         description: '请选择你需要集成的插件 y 表示集成  n 表示不集成'
         required: true
-        default: '{"vpnsvr":"y","vpncli":"y","vpncmd":"y","ss":"y","v2ray":"y","xray":"y","trojan":"y","singbox":"y","naiveproxy":"y","ssobfs":"y","dnsforwarder":"y","adbyby":"y","adguardhome":"y","smartdns":"y","aliddns":"y","zerotier":"y","ddnsto":"y","wireguard":"y","frpc":"y","aldrive":"y","sqm":"y","mentohust":"y","scutclient":"y","njitclient":"y","minieap":"y","dogcom":"y","transmission":"y","aria":"y","ariaweb":"y"}'
+        default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"n","v2ray":"n","xray":"n","trojan":"n","singbox":"n","naiveproxy":"n","ssobfs":"n","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"n","aldrive":"n","sqm":"n","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n","transmission":"n","aria":"n","ariaweb":"n"}'
       firmwarever:
         description: '自定义编译版本，默认显示编译日期'
         required: true
-        default: '20240209'
+        default: '20240624'
 env:
   REPOSITORY_URL: https://github.com/tsl0922/padavan.git
   WORK_PATH: /opt/padavan-4.4
@@ -347,7 +347,7 @@ jobs:
         sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I\$(ROOTDIR)/stage/include/libxml2|' ./trunk/user/aria2/Makefile
         sed -i 's|-static-libstdc++|-static-libstdc++ -L\$(ROOTDIR)/stage/lib|'  ./trunk/user/aria2/Makefile
         sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\$CFLAGS -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|'  ./trunk/user/aria2/Makefile
-        cat ./trunk/user/aria2/Makefile
+        
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: 打包命名固件
