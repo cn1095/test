@@ -21,7 +21,7 @@ jobs:
     - name: test
       run: |
          aarch64-linux-musl-gcc -v
-         echo $CFLDAGS
+         echo $CFLAGS
 
     - uses: actions/upload-artifact@v4
       with:
