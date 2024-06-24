@@ -325,7 +325,7 @@ jobs:
       run: |
         cd $WORK_PATH
         #去掉编译警告中断编译
-        sed -i "s/-Wall/-w/g" ./trunk/linux-4.4.x/Makefile
+        sed -i "s/-Wall/-Wno-error/g" ./trunk/linux-4.4.x/Makefile
         #修改adg为最新版本
         adg_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
         sed -i "s/^\(PKG_VERSION:=\).*/\1$adg_tag/" ./trunk/user/adguardhome/Makefile
