@@ -344,12 +344,12 @@ jobs:
         sed -i "s/^\(PKG_VERSION:=\).*/\1$nai_tag/" ./trunk/user/naiveproxy/Makefile
         sed -i "s/8737c4a796ff2ecee3afbb42c345d313baeb774742c440b0d97a1124896f45b3/skip/g" ./trunk/user/naiveproxy/Makefile
         #修改Aria2
+        sed -i '/LDFLAGS += -static-libstdc++/a \$(info xmlversion.h found at: \$(XMLVERSION_H_PATH))' ./trunk/user/aria2/Makefile
+        sed -i '/LDFLAGS += -static-libstdc++/a XMLVERSION_H_PATH := \$(shell find \$(STAGING_DIR) -name xmlversion.h -print)' ./trunk/user/aria2/Makefile
         sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I\$(STAGING_DIR)/include|' ./trunk/user/aria2/Makefile
         sed -i 's|-static-libstdc++|-static-libstdc++ -L\$(STAGING_DIR)/lib|'  ./trunk/user/aria2/Makefile
-        make TOOLCHAIN=mipsel-linux-musl
-        cd $WORK_PATH/trunk
-        make libs/libxml2_only
-        find /opt -name xmlversion.h
+        cat ./trunk/user/aria2/Makefile
+        
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: 打包命名固件
