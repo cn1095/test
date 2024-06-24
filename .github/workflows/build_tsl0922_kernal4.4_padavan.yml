@@ -317,7 +317,7 @@ jobs:
     - name: Build firmware
       run: |
         cd $WORK_PATH
-        sed -i "s/-Wno-format-security/-Wno-format-security -Wno-misleading-indentation/g" ./trunk/linux-4.4.x/Makefile
+        sed -i "s/-Wall/-w/g" ./trunk/linux-4.4.x/Makefile
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: Organize firmware files
