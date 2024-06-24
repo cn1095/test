@@ -37,7 +37,7 @@ on:
         - Xiaoyu_C3
         - Xiaoyu_C5
         - ZTE_E8820S
-        default: Xiaomi_R3G
+        default: Youhua_WR1200JS
       plugins:
         description: '请选择你需要集成的插件 y 表示集成  n 表示不集成'
         required: true
@@ -347,7 +347,7 @@ jobs:
         sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I\$(ROOTDIR)/stage/include/libxml2|' ./trunk/user/aria2/Makefile
         sed -i 's|-static-libstdc++|-static-libstdc++ -L\$(ROOTDIR)/stage/lib|'  ./trunk/user/aria2/Makefile
         sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\$CFLAGS -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|'  ./trunk/user/aria2/Makefile
-        
+        cat ./trunk/user/aria2/Makefile
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: 打包命名固件
