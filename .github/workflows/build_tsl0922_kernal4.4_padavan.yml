@@ -325,8 +325,6 @@ jobs:
         cd $WORK_PATH
         #去掉编译警告中断编译
         sed -i "s/-Wall/-w/g" ./trunk/linux-4.4.x/Makefile
-        sed -i "s/0.107.34/0.107.51/g" ./trunk/user/adguardhome/Makefile
-        sed -i "s/66a78f1817e5b465744259b21f2bfa2bdafbba1db6c65023293a98dc0ec3e754/skip/g" ./trunk/user/adguardhome/Makefile
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: 打包命名固件
