@@ -15,7 +15,7 @@ jobs:
     - name: 下载gcc
       uses: lmq8267/dl-musl@main
       with:
-        target: aarch64-linux-musl
+        target: aarch64-linux-mus
 
     - name: test
       run: aarch64-linux-musl-gcc -v
