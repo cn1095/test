@@ -59,7 +59,6 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - uses: actions/checkout@v4
     - uses: Bonnie2980/variable-mapper@master
       id: export
       with:
