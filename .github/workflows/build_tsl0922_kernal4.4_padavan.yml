@@ -1,11 +1,11 @@
-name: Build tsl0922's kernal4.4 Padavan
+name: 编译tsl0922-Padavan-4.4内核
 
 on:
   workflow_dispatch:
     inputs:
       target:
         type: choice
-        description: 'target to compile'
+        description: '请选择你的路由器型号'
         options:
         - Gee_B70
         - Nokia-Sbell_A-040W-Q
@@ -39,11 +39,11 @@ on:
         - ZTE_E8820S
         default: Xiaomi_R3G
       plugins:
-        description: 'json format string of include configs'
+        description: '请选择你需要集成的插件 y 表示集成  n 表示不集成'
         required: true
         default: '{"vpnsvr":"y","vpncli":"y","vpncmd":"y","ss":"y","v2ray":"y","xray":"y","trojan":"y","singbox":"y","naiveproxy":"y","ssobfs":"y","dnsforwarder":"y","adbyby":"y","adguardhome":"y","smartdns":"y","aliddns":"y","zerotier":"y","ddnsto":"y","wireguard":"y","frpc":"y","aldrive":"y","sqm":"y","mentohust":"y","scutclient":"y","njitclient":"y","minieap":"y","dogcom":"y","transmission":"y","aria":"y","ariaweb":"y"}'
       firmwarever:
-        description: 'firmware''s version'
+        description: '自定义编译版本，默认显示编译日期'
         required: true
         default: '20240209'
 env:
@@ -163,9 +163,15 @@ jobs:
           }
         export_to: env
         mode: first_match
-    - uses: actions/setup-go@v5
+    - name: 获取最新go版本
+      run: |
+          latest_version=$(curl -L -k -s https://golang.org/dl/?mode=json | grep -m 1 -o '"version": "[^"]*' | sed 's/"version": "//' | tr -d 'go" ')
+          echo "go版本=$latest_version"
+          echo "gotag=$latest_version" >> $GITHUB_ENV
+    - name: 安装最新go
+      uses: actions/setup-go@v5
       with:
-        go-version: '1.20'
+        go-version: '${{ env.gotag }}'
         check-latest: true
         cache: false
     - uses: actions/setup-node@v4
@@ -182,12 +188,12 @@ jobs:
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev
         sudo timedatectl set-timezone "$TIME_ZONE"
-    - name: Clone source code
+    - name: 克隆padavan源码
       run: |
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
         cd $WORK_PATH
         sed -i '/cp -f/d' Makefile
-    - name: Parse json string of include plugins
+    - name: 获取用户输入的集成插件
       run: |
         echo "vpnsvr=${{fromJson(github.event.inputs.plugins).vpnsvr}}" >> $GITHUB_ENV
         echo "vpncli=${{fromJson(github.event.inputs.plugins).vpncli}}" >> $GITHUB_ENV
@@ -218,7 +224,7 @@ jobs:
         echo "transmission=${{fromJson(github.event.inputs.plugins).transmission}}" >> $GITHUB_ENV
         echo "aria=${{fromJson(github.event.inputs.plugins).aria}}" >> $GITHUB_ENV
         echo "ariaweb=${{fromJson(github.event.inputs.plugins).ariaweb}}" >> $GITHUB_ENV
-    - name: Custom config
+    - name: 自定义配置文件
       run: |
         cd $WORK_PATH/trunk
         if [ ! -f configs/templates/${{ env.model }}.config ] ; then
@@ -314,13 +320,14 @@ jobs:
         sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${{ github.event.inputs.firmwarever }}/g" ./versions.inc
         echo '更新版本号时间'
         #########################################################################################
-    - name: Build firmware
+    - name: 开始编译
       run: |
         cd $WORK_PATH
+        #去掉编译警告中断编译
         sed -i "s/-Wall/-w/g" ./trunk/linux-4.4.x/Makefile
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
-    - name: Organize firmware files
+    - name: 打包命名固件
       id: organize
       run: |
         mkdir -p $FIRMWARE_PATH/
@@ -331,9 +338,9 @@ jobs:
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "STATUS=success" >> $GITHUB_ENV
-    - name : Upload packages
+    - name : 上传固件包
       uses: actions/upload-artifact@main
       if: env.STATUS == 'success'
       with:
-        name: tsl0922-Padavan44-packages
+        name: ${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ env.model }}"_kernal4.4"
         path: ${{ env.FIRMWARE }}
