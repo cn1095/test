@@ -327,7 +327,7 @@ jobs:
         sed -i "s/-Wall/-w/g" ./trunk/linux-4.4.x/Makefile
         sed -i "s/0.107.34/0.107.51/g" ./trunk/user/adguardhome/Makefile
         sed -i "s/66a78f1817e5b465744259b21f2bfa2bdafbba1db6c65023293a98dc0ec3e754/skip/g" ./trunk/user/adguardhome/Makefile
-        sed -i "s#zip -r embed.zip build; \\##g" ./trunk/user/adguardhome/Makefile
+        sed -i 's/zip -r embed.zip build; \\//g' ./trunk/user/adguardhome/Makefile
         rm -rf ./trunk/user/adguardhome/patches
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
