@@ -59,24 +59,14 @@ jobs:
         with:
           version: latest
           install-only: true
-      - name: 下载编译工具链
-        run: |
-          mkdir -p /opt/musl_gcc 
-          sudo timedatectl set-timezone "Asia/Shanghai"
-          wget -q -c https://musl.cc/${{ env.TARGET }}-cross.tgz -P /opt/musl_gcc/
-          tar zxf /opt/musl_gcc/${{ env.TARGET }}-cross.tgz -C /opt/musl_gcc/
+      - name: 下载gcc
+        uses: lmq8267/dl-musl@main
+        with:
+          target: ${{ env.TARGET }}
+          static: true
       - name: 编译candy
         run: |
           echo "##########################编译candy二进制#################################"
-          export PATH=/opt/musl_gcc/${{ env.TARGET }}-cross/bin:$PATH
-          export CC=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-gcc
-          export CXX=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-g++
-          export AR=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ar
-          export LD=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ld
-          export RANLIB=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-ranlib
-          export STRIP=/opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-strip
-          export CFLAGS="-I /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/include -L /opt/musl_gcc/${{ env.TARGET }}-cross/${{ env.TARGET }}/lib"
-          export LDFLAGS="-static $CFLAGS"
 
           cmake -DCANDY_STATIC=1 -DTARGET_OPENSSL=$OPENSSL_TARGET -DCMAKE_BUILD_TYPE=Release .
           make -j$(nproc)
@@ -90,7 +80,7 @@ jobs:
         if: github.event.inputs.strip == 'true'
         run: |
           cd /opt/bin
-          /opt/musl_gcc/${{ env.TARGET }}-cross/bin/${{ env.TARGET }}-strip /opt/bin/candy
+          $STRIP /opt/bin/candy
           file ./candy
           ls -alh /opt/bin/candy
       - name: 压缩candy
