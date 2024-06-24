@@ -15,11 +15,10 @@ jobs:
     - name: 下载gcc
       uses: lmq8267/dl-musl@main
       with:
-        toolchain: stable
         target: aarch64-linux-musl
 
     - name: test
-      run: $CC -v
+      run: arch64-linux-musl -v
 
     - uses: actions/upload-artifact@v4
       with:
