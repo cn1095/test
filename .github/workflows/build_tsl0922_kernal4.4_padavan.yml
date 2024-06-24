@@ -172,7 +172,7 @@ jobs:
       uses: actions/setup-go@v5
       with:
         #go-version: '${{ env.gotag }}'
-        go-version: '1.21.1'
+        go-version: '1.21'
         check-latest: true
         cache: false
     - uses: actions/setup-node@v4
