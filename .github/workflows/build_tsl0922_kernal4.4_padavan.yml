@@ -327,16 +327,16 @@ jobs:
         sed -i "s/-Wall/-w/g" ./trunk/linux-4.4.x/Makefile
         #修改adg为最新版本
         adg_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
-        sed -i "s/0.107.34/$adg_tag/g" ./trunk/user/adguardhome/Makefile
+        sed -i "s/^\(PKG_VERSION:=\).*/\1$adg_tag/g" ./trunk/user/adguardhome/Makefile
         sed -i "s/66a78f1817e5b465744259b21f2bfa2bdafbba1db6c65023293a98dc0ec3e754/skip/g" ./trunk/user/adguardhome/Makefile
         rm -rf ./trunk/user/adguardhome/patches
         #修改v2ray最新
         v2ray_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/v2fly/v2ray-core/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
-        sed -i "s/5.5.0/$v2ray_tag/g" ./trunk/user/v2ray/Makefile
+        sed -i "s/^\(PKG_VERSION:=\).*/\1$v2ray_tag/g" ./trunk/user/v2ray/Makefile
         sed -i "s/b9110ff10d87b245efd42b5a93beb4a3e5138fcfe92d09cadfb6a72cc4e1c91c/skip/g" ./trunk/user/v2ray/Makefile
         #修改xray最新
         xray_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/XTLS/Xray-core/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
-        sed -i "s/1.7.5/$xray_tag/g" ./trunk/user/xray/Makefile
+        sed -i "s/^\(PKG_VERSION:=\).*/\1$xray_tag/g" ./trunk/user/xray/Makefile
         sed -i "s/a5fc936136a57a463bf9a895d068fdfa895b168ae6093c58a10208e098b6b2d3/skip/g" ./trunk/user/xray/Makefile
         
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl -j$(nproc)
