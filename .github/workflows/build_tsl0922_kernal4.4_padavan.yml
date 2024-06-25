@@ -53,7 +53,7 @@ env:
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: tsl0922
   FIRMWARE_PATH: /opt/firmwares
-  firmwarever: github.event.inputs.firmwarever
+  firmwarever: "${{ github.event.inputs.firmwarever }}"
 jobs:
   build:
     runs-on: ubuntu-22.04
