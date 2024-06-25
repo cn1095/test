@@ -346,7 +346,9 @@ jobs:
         sed -i 's/HASH:=.*$/HASH:=skip/g' ./trunk/user/naiveproxy/Makefile
         cat ./trunk/user/naiveproxy/Makefile
         #修改Aria2
-        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\${CFLAGS} -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|'  ./trunk/user/aria2/Makefile
+        echo "修改Aria2"
+        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\${CFLAGS} -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|' ./trunk/user/aria2/Makefile
+        cat ./trunk/user/aria2/Makefile
         echo "开始编译${{ env.model }}"
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
