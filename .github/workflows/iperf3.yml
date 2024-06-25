@@ -22,7 +22,6 @@ jobs:
     - name: Build iperf3
       working-directory: /cygdrive/c/tmp/iperf3
       run: |
-        ./bootstrap.sh
         ./configure --enable-static
         make
 
