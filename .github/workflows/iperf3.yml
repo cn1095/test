@@ -16,7 +16,7 @@ jobs:
     - name: Compile iperf3
       run: |
         cd C:\tools\cygwin\tmp
-        git clone https://github.com/esnet/iperf -b 3.17.1 
+        git clone https://github.com/esnet/iperf -b 3.17.1 ./iperf
         cd ./iperf
         ./configure --enable-static-bin CFLAGS="-static -pthread"
         make
