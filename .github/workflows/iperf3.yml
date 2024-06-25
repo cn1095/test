@@ -11,31 +11,38 @@ jobs:
     - name: Set up Cygwin
       uses: egor-tensin/setup-cygwin@v4
       with:
-       packages: cmake gcc-g++ autoconf automake openssl-devel libtool git
+        packages: cmake gcc-g++ autoconf automake openssl-devel libtool git make
 
-    - name: Compile iperf3
+    - name: Create working directory
+      run: mkdir -p /cygdrive/c/tmp
+
+    - name: Clone iperf3 repository
+      run: git clone https://github.com/esnet/iperf /cygdrive/c/tmp/iperf3
+
+    - name: Build iperf3
+      working-directory: /cygdrive/c/tmp/iperf3
       run: |
-        cd C:\tools\cygwin\tmp
-        git clone https://github.com/esnet/iperf -b 3.17.1 ./iperf
-        cd ./iperf
-        ./configure --enable-static-bin CFLAGS="-static -pthread"
+        ./bootstrap.sh
+        ./configure --enable-static
         make
-        make check
 
-    - name: Gather DLLs
+    - name: Package dependencies
+      working-directory: /cygdrive/c/tmp/iperf3
       run: |
-        cd C:\tools\cygwin\tmp/iperf
-        mkdir -p output
-        cp ./src/iperf3.exe ./output/
-        cygcheck ./output/iperf3.exe | grep -oP 'C:.+?\.dll' | xargs -I '{}' cp '{}' ./output/
+        mkdir -p /cygdrive/c/tmp/iperf3-package
+        cp src/iperf3.exe /cygdrive/c/tmp/iperf3-package/
+        cygcheck -v /cygdrive/c/tmp/iperf3/src/iperf3.exe > /cygdrive/c/tmp/iperf3-package/dependencies.txt
+        for dll in $(cygcheck -v /cygdrive/c/tmp/iperf3/src/iperf3.exe | grep cyg | awk '{print $NF}'); do
+          cp $dll /cygdrive/c/tmp/iperf3-package/
+        done
 
-    - name: Create Tarball of Binaries and DLLs
+    - name: Create archive
       run: |
-        cd C:\tools\cygwin\tmp/iperf/output
-        tar -czvf iperf3-windows-static.tar.gz -C .
+        cd /cygdrive/c/tmp/iperf3-package
+        tar -czvf iperf3-package.tar.gz *
 
-    - name: Upload Release Asset
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: iperf3-windows-static
-        path: C:\tools\cygwin\tmp/iperf/iperf3-windows-static.tar.gz
+        name: iperf3-package
+        path: /cygdrive/c/tmp/iperf3-package/iperf3-package.tar.gz
