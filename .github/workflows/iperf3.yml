@@ -8,35 +8,34 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        repository:  esnet/iperf
-        ref: 3.17.1
-
     - name: Set up Cygwin
       uses: egor-tensin/setup-cygwin@v4
       with:
-       packages: cmake gcc-g++ autoconf automake openssl-devel libtool
+       packages: cmake gcc-g++ autoconf automake openssl-devel libtool git
 
     - name: Compile iperf3
       run: |
+        cd C:\tools\cygwin\tmp
+        git clone https://github.com/esnet/iperf -b 3.17.1 
+        cd ./iperf
         ./configure --enable-static-bin CFLAGS="-static -pthread"
         make
         make check
 
     - name: Gather DLLs
       run: |
+        cd C:\tools\cygwin\tmp/iperf
         mkdir -p output
-        cp src/iperf3.exe output/
-        cygcheck output/iperf3.exe | grep -oP 'C:.+?\.dll' | xargs -I '{}' cp '{}' output/
+        cp ./src/iperf3.exe ./output/
+        cygcheck ./output/iperf3.exe | grep -oP 'C:.+?\.dll' | xargs -I '{}' cp '{}' ./output/
 
     - name: Create Tarball of Binaries and DLLs
       run: |
-        tar -czvf iperf3-windows-static.tar.gz -C output .
+        cd C:\tools\cygwin\tmp/iperf/output
+        tar -czvf iperf3-windows-static.tar.gz -C .
 
     - name: Upload Release Asset
       uses: actions/upload-artifact@v4
       with:
         name: iperf3-windows-static
-        path: iperf3-windows-static.tar.gz
+        path: C:\tools\cygwin\tmp/iperf/iperf3-windows-static.tar.gz
