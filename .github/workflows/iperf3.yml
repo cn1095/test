@@ -13,20 +13,18 @@ jobs:
       with:
         packages: cmake gcc-g++ autoconf automake openssl-devel libtool git make
 
-    - name: Create working directory
-      run: mkdir -p /cygdrive/c/tmp
-
     - name: Clone iperf3 repository
-      run: git clone https://github.com/esnet/iperf /cygdrive/c/tmp/iperf3
+      working-directory: C:\tools\cygwin\tmp
+      run: git clone https://github.com/esnet/iperf 
 
     - name: Build iperf3
-      working-directory: /cygdrive/c/tmp/iperf3
+      working-directory: C:\tools\cygwin\tmp\iperf
       run: |
         ./configure --enable-static
         make
 
     - name: Package dependencies
-      working-directory: /cygdrive/c/tmp/iperf3
+      working-directory: C:\tools\cygwin\tmp\iperf
       run: |
         mkdir -p /cygdrive/c/tmp/iperf3-package
         cp src/iperf3.exe /cygdrive/c/tmp/iperf3-package/
