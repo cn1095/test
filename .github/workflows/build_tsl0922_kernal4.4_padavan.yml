@@ -319,8 +319,10 @@ jobs:
         #格式如下：
         #sed -i '/自定义项/d' .config
         #echo "自定义项=y" >> .config
-        [[ "$firmwarever" != "" ]] && sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${firmwarever}/g" ./versions.inc
-        [[ "$firmwarever" != "" ]] && echo '更新版本号时间${firmwarever}'
+        if [[ "$firmwarever" != "" ]] ; then
+           sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${firmwarever}/g" ./versions.inc
+           echo '更新版本号时间${firmwarever}'
+        fi
         #########################################################################################
     - name: 开始编译
       run: |
