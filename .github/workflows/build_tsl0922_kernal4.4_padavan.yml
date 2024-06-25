@@ -344,9 +344,9 @@ jobs:
         sed -i "s/^\(PKG_VERSION:=\).*/\1$nai_tag/g" ./trunk/user/naiveproxy/Makefile
         sed -i 's/HASH:=.*$/HASH:=skip/g' ./trunk/user/naiveproxy/Makefile
         #修改Aria2
-        sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I\$(ROOTDIR)/stage/include/libxml2|g' ./trunk/user/aria2/Makefile
-        sed -i 's|-static-libstdc++|-static-libstdc++ -L\$(ROOTDIR)/stage/lib|g'  ./trunk/user/aria2/Makefile
-        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\$(CFLAGS) -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|g' ./trunk/user/aria2/Makefile
+        sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I \$(ROOTDIR)/stage/include/libxml2|g' ./trunk/user/aria2/Makefile
+        sed -i 's|-static-libstdc++|-static-libstdc++ -L \$(ROOTDIR)/stage/lib|g'  ./trunk/user/aria2/Makefile
+        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\$(CFLAGS) -I \$(ROOTDIR)/stage/include/libxml2 -L \$(ROOTDIR)/stage/lib"|g' ./trunk/user/aria2/Makefile
         
         echo "开始编译${{ env.model }}"
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
