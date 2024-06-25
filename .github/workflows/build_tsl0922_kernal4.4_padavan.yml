@@ -342,7 +342,7 @@ jobs:
         #修改naiveproxy版本
         nai_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/klzgrad/naiveproxy/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
         sed -i "s/^\(PKG_VERSION:=\).*/\1$nai_tag/" ./trunk/user/naiveproxy/Makefile
-        sed -i "s/^\(HASH:=\).*/\1skip/" ./trunk/user/naiveproxy/Makefile
+        sed -i "s/^\(ASH:=\).*/\1skip/" ./trunk/user/naiveproxy/Makefile
         cat ./trunk/user/naiveproxy/Makefile
         #修改Aria2
         sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\${CFLAGS} -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|'  ./trunk/user/aria2/Makefile
