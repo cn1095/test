@@ -1,0 +1,50 @@
+name: Compile iperf3 using Cygwin on Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        repository:  esnet/iperf
+        ref: 3.17.1
+
+    - name: Install Cygwin
+      run: |
+        choco install cygwin --params "/InstallDir:C:\cygwin"
+    
+    - name: Install Cygwin Packages
+      run: |
+        C:\cygwin\setup-x86_64.exe -q -P gcc-g++,make,autoconf,automake,libtool,openssl-devel
+
+    - name: Add Cygwin to PATH
+      run: echo "C:\cygwin\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    - name: Compile iperf3
+      run: |
+        cd ${{ github.workspace }}
+        ./bootstrap.sh
+        ./configure
+        make
+        make check
+
+    - name: Gather DLLs
+      run: |
+        mkdir -p output
+        cp src/iperf3.exe output/
+        cygcheck output/iperf3.exe | grep -oP 'C:.+?\.dll' | xargs -I '{}' cp '{}' output/
+
+    - name: Create Tarball of Binaries and DLLs
+      run: |
+        tar -czvf iperf3-windows-static.tar.gz -C output .
+
+    - name: Upload Release Asset
+      uses: actions/upload-artifact@v4
+      with:
+        name: iperf3-windows-static
+        path: iperf3-windows-static.tar.gz
