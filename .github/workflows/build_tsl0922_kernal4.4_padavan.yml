@@ -328,27 +328,23 @@ jobs:
         sed -i "s/-Wall/-w/g" ./trunk/linux-4.4.x/Makefile
         #修改adg为最新版本
         adg_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
-        sed -i "s/^\(PKG_VERSION:=\).*/\1$adg_tag/" ./trunk/user/adguardhome/Makefile
-        sed -i "s/^\(PKG_HASH:=\).*/\1skip/" ./trunk/user/adguardhome/Makefile
+        sed -i "s/^\(PKG_VERSION:=\).*/\1$adg_tag/g" ./trunk/user/adguardhome/Makefile
+        sed -i "s/^\(PKG_HASH:=\).*/\1skip/g" ./trunk/user/adguardhome/Makefile
         rm -rf ./trunk/user/adguardhome/patches
         #修改v2ray最新
         v2ray_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/v2fly/v2ray-core/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
-        sed -i "s/^\(PKG_VERSION:=\).*/\1$v2ray_tag/" ./trunk/user/v2ray/Makefile
+        sed -i "s/^\(PKG_VERSION:=\).*/\1$v2ray_tag/g" ./trunk/user/v2ray/Makefile
         sed -i "s/^\(PKG_HASH:=\).*/\1skip/g" ./trunk/user/v2ray/Makefile
         #修改xray最新
         xray_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/XTLS/Xray-core/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
-        sed -i "s/^\(PKG_VERSION:=\).*/\1$xray_tag/" ./trunk/user/xray/Makefile
-        sed -i "s/^\(PKG_HASH:=\).*/\1skip/" ./trunk/user/xray/Makefile
+        sed -i "s/^\(PKG_VERSION:=\).*/\1$xray_tag/g" ./trunk/user/xray/Makefile
+        sed -i "s/^\(PKG_HASH:=\).*/\1skip/g" ./trunk/user/xray/Makefile
         #修改naiveproxy版本
         nai_tag="$( curl -L --connect-timeout 3 -s  https://api.github.com/repos/klzgrad/naiveproxy/releases/latest  2>&1 | grep 'tag_name' | cut -d\" -f4 | tr -d 'v')"
-        sed -i "s/^\(PKG_VERSION:=\).*/\1$nai_tag/" ./trunk/user/naiveproxy/Makefile
-        echo "修改naiveproxy版本"
+        sed -i "s/^\(PKG_VERSION:=\).*/\1$nai_tag/g" ./trunk/user/naiveproxy/Makefile
         sed -i 's/HASH:=.*$/HASH:=skip/g' ./trunk/user/naiveproxy/Makefile
-        cat ./trunk/user/naiveproxy/Makefile
         #修改Aria2
-        echo "修改Aria2"
-        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\${CFLAGS} -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|' ./trunk/user/aria2/Makefile
-        cat ./trunk/user/aria2/Makefile
+        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\${CFLAGS} -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|g' ./trunk/user/aria2/Makefile
         echo "开始编译${{ env.model }}"
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
