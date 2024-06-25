@@ -30,7 +30,6 @@ jobs:
 
     - name: Compile iperf3
       run: |
-        cd ${{ github.workspace }}
         ./bootstrap.sh
         ./configure
         make
