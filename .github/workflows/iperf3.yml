@@ -15,9 +15,12 @@ jobs:
         ref: 3.17.1
 
     - name: Install Cygwin
+      run: choco install cygwin --params "/InstallDir:C:\cygwin"
+
+    - name: Download Cygwin Setup
       run: |
-        choco install cygwin --params "/InstallDir:C:\cygwin"
-    
+        Invoke-WebRequest -Uri http://cygwin.com/setup-x86_64.exe -OutFile C:\cygwin\setup-x86_64.exe
+
     - name: Install Cygwin Packages
       run: |
         C:\cygwin\setup-x86_64.exe -q -P gcc-g++,make,autoconf,automake,libtool,openssl-devel
