@@ -346,9 +346,9 @@ jobs:
         #修改Aria2
         sed -i '/LDFLAGS += -static-libstdc++/a \$(info xmlversion.h found at: \$(XMLVERSION_H_PATH))' ./trunk/user/aria2/Makefile
         sed -i '/LDFLAGS += -static-libstdc++/a XMLVERSION_H_PATH := \$(shell find /opt -name xmlversion.h -print)' ./trunk/user/aria2/Makefile
-        sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I \$(ROOTDIR)/stage/include/libxml2|g' ./trunk/user/aria2/Makefile
-        sed -i 's|-static-libstdc++|-static-libstdc++ -L \$(ROOTDIR)/stage/lib|g'  ./trunk/user/aria2/Makefile
-        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\$(CFLAGS) -I \$(ROOTDIR)/stage/include/libxml2 -L \$(ROOTDIR)/stage/lib"|g' ./trunk/user/aria2/Makefile
+        sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I\$(ROOTDIR)/stage/include/libxml2|g' ./trunk/user/aria2/Makefile
+        sed -i 's|-static-libstdc++|-static-libstdc++ -L\$(ROOTDIR)/stage/lib|g'  ./trunk/user/aria2/Makefile
+        sed -i 's|--prefix=/usr|--prefix=/usr CFLAGS="\$(CFLAGS) -I\$(ROOTDIR)/stage/include/libxml2 -L\$(ROOTDIR)/stage/lib"|g' ./trunk/user/aria2/Makefile
         
         echo "开始编译${{ env.model }}"
         sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
