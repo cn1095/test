@@ -318,7 +318,7 @@ jobs:
         #格式如下：
         #sed -i '/自定义项/d' .config
         #echo "自定义项=y" >> .config
-        sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${{ github.event.inputs.firmwarever }}/g" ./versions.inc
+        [[ github.event.inputs.firmwarever != '' ]] && sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${{ github.event.inputs.firmwarever }}/g" ./versions.inc
         echo '更新版本号时间${{ github.event.inputs.firmwarever }}'
         #########################################################################################
     - name: 开始编译
@@ -344,8 +344,6 @@ jobs:
         sed -i "s/^\(PKG_VERSION:=\).*/\1$nai_tag/g" ./trunk/user/naiveproxy/Makefile
         sed -i 's/HASH:=.*$/HASH:=skip/g' ./trunk/user/naiveproxy/Makefile
         #修改Aria2
-        sed -i '/LDFLAGS += -static-libstdc++/a \$(info xmlversion.h found at: \$(XMLVERSION_H_PATH))' ./trunk/user/aria2/Makefile
-        sed -i '/LDFLAGS += -static-libstdc++/a XMLVERSION_H_PATH := \$(shell find /opt -name xmlversion.h -print)' ./trunk/user/aria2/Makefile
         sed -i 's|-fvisibility=hidden|-fvisibility=hidden -I\$(ROOTDIR)/stage/include/libxml2|g' ./trunk/user/aria2/Makefile
         sed -i 's|-static-libstdc++|-static-libstdc++ -L\$(ROOTDIR)/stage/lib|g'  ./trunk/user/aria2/Makefile
         sed -i 's|--prefix=/usr|--prefix=/usr CXXFLAGS="\$(CFLAGS)"|g' ./trunk/user/aria2/Makefile
