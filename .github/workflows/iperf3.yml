@@ -14,24 +14,14 @@ jobs:
         repository:  esnet/iperf
         ref: 3.17.1
 
-    - name: Install Cygwin
-      run: choco install cygwin --params "/InstallDir:C:\cygwin"
-
-    - name: Download Cygwin Setup
-      run: |
-        Invoke-WebRequest -Uri http://cygwin.com/setup-x86_64.exe -OutFile C:\cygwin\setup-x86_64.exe
-
-    - name: Install Cygwin Packages
-      run: |
-        C:\cygwin\setup-x86_64.exe -q -P gcc-g++,make,autoconf,automake,libtool,openssl-devel
-
-    - name: Add Cygwin to PATH
-      run: echo "C:\cygwin\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+    - name: Set up Cygwin
+      uses: egor-tensin/setup-cygwin@v4
+      with:
+       packages: cmake gcc-g++ autoconf automake openssl-devel libtool
 
     - name: Compile iperf3
       run: |
-        ./bootstrap.sh
-        ./configure
+        ./configure --enable-static-bin CFLAGS="-static -pthread"
         make
         make check
 
