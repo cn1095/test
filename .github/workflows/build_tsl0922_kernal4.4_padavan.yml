@@ -43,9 +43,9 @@ on:
         required: true
         default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"n","v2ray":"n","xray":"n","trojan":"n","singbox":"n","naiveproxy":"n","ssobfs":"n","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"n","aldrive":"n","sqm":"n","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n","transmission":"n","aria":"n","ariaweb":"n"}'
       firmwarever:
-        description: '自定义编译版本，默认显示编译日期'
+        description: '自定义固件版本号，默认为当天编译日期'
         required: true
-        default: '20240624'
+        default: ''
 env:
   REPOSITORY_URL: https://github.com/tsl0922/padavan.git
   WORK_PATH: /opt/padavan-4.4
@@ -319,7 +319,7 @@ jobs:
         #sed -i '/自定义项/d' .config
         #echo "自定义项=y" >> .config
         [[ github.event.inputs.firmwarever != '' ]] && sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${{ github.event.inputs.firmwarever }}/g" ./versions.inc
-        echo '更新版本号时间${{ github.event.inputs.firmwarever }}'
+        [[ github.event.inputs.firmwarever != '' ]] && echo '更新版本号时间${{ github.event.inputs.firmwarever }}'
         #########################################################################################
     - name: 开始编译
       run: |
@@ -357,7 +357,7 @@ jobs:
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk/images
         for firmwarefile in $(ls *.trx)
-        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ env.model }}"_kernal4.4.trx"
+        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ env.model }}"_padavan4.4.trx"
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
