@@ -1,4 +1,4 @@
-name: Rust-static-build
+name: AAA-yt-dlp
 on:
   workflow_dispatch:
     inputs:
