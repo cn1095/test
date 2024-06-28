@@ -120,6 +120,7 @@ jobs:
               chmod +x ./dist/yt-dlp_linux_${arch}
               cp ./dist/yt-dlp_linux_${arch} ./dist/yt-dlp_linux_${arch}_downgraded
               version="$(./dist/yt-dlp_linux_${arch} --version)"
+              ldd ./dist/yt-dlp_linux_${arch} 
               ./dist/yt-dlp_linux_${arch}_downgraded -v --update-to yt-dlp/yt-dlp@2023.03.04
               downgraded_version="$(./dist/yt-dlp_linux_${arch}_downgraded --version)"
               [[ "$version" != "$downgraded_version" ]]
