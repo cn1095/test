@@ -31,9 +31,9 @@ jobs:
           
       - name: Build libarchive
         run: |
-          wget https://www.libarchive.org/downloads/libarchive-3.6.1.tar.gz
-          tar -xzf libarchive-3.6.1.tar.gz
-          cd libarchive-3.6.1
+          wget -q https://www.libarchive.org/downloads/libarchive-3.7.4.tar.gz
+          tar -xzf libarchive-3.7.4.tar.gz
+          cd libarchive-3.7.4
           CC=mipsel-linux-muslsf-gcc ./configure --host=mipsel-linux-muslsf --enable-static --disable-shared
           make
           sudo make install
