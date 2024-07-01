@@ -2,9 +2,15 @@ name: vnts-FreeBSD测试
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: '请填写构建vnts的lbl8603/vnts分支或提交记录，默认主分支master'
+        required: true
+        default: 'master'
   
 env:
   CARGO_TERM_COLOR: always
+  BRANCH: "${{ github.event.inputs.tag }}"
 jobs:
  build:
     runs-on: ubuntu-latest
@@ -13,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: lbl8603/vnts
-          ref: master #默认使用master分支
+          ref: ${{ env.BRANCH }} #默认使用master分支
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
         with:
