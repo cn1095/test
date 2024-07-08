@@ -1,6 +1,6 @@
 #https://www.cnblogs.com/findumars/p/6901802.html   php编译
 #https://www.cnblogs.com/gcczhongduan/p/5238688.html nginx编译
-#https://blog.51cto.com/u_14640655/5045784   nginx编译
+#https://blog.51cto.com/u_14640655/5045784   nginx编译  https://www.jianshu.com/p/a34dcab49552
 name: A编译mipsel-nginx
 on:
   workflow_dispatch:
