@@ -35,8 +35,14 @@ jobs:
           sudo ln -s /opt/musl_gcc/armv5l-linux-musleabi-cross/bin/*gcc /usr/bin/
           #sudo apt-get update && sudo apt-get install -qq crossbuild-essential-arm64 crossbuild-essential-armhf musl-tools protobuf-compiler
           
-          rustup target add armv5te-unknown-linux-musleabi
-
+          #rustup target add armv5te-unknown-linux-musleabi
+          cd /opt/musl_gcc/armv5l-linux-musleabi-cross/lib/gcc/armv5l-linux-musleabi/11.2.1
+          
+          cp libgcc_eh.a libunwind.a
+          ar x libgcc.a _ctzsi2.o _clz.o _bswapsi2.o
+          ar rcs libctz.a _ctzsi2.o _clz.o _bswapsi2.o
+          rustup toolchain install nightly-x86_64-unknown-linux-gnu
+          rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
           #添加交叉编译配置
           cat >>~/.cargo/config <<EOF
           [target.armv5te-unknown-linux-musleabi]
@@ -59,8 +65,8 @@ jobs:
           cd /opt/et
           mkdir -p /opt/bin
           
-          cargo build --release --target armv5te-unknown-linux-musleabi 
-          
+          #cargo build --release --target armv5te-unknown-linux-musleabi 
+          cargo +nightly build -r --target armv5te-unknown-linux-musleabi -Z build-std=std,panic_abort --no-default-features --features mips
           /opt/musl_gcc/armv5te-unknown-linux-musleabi-cross/bin/armv5te-unknown-linux-musleabi-strip ./target/armv5te-unknown-linux-musleabi/release/easytier-core
           /opt/musl_gcc/armv5te-unknown-linux-musleabi-cross/bin/armv5te-unknown-linux-musleabi-strip ./target/armv5te-unknown-linux-musleabi/release/easytier-cli
          
