@@ -27,8 +27,8 @@ jobs:
         run: |
           mkdir -p /opt/musl_gcc
           rustup set auto-self-update disable
-          rustup install 1.75
-          rustup default 1.75
+          rustup install 1.79
+          rustup default 1.79
           
           wget -q -c https://more.musl.cc/x86_64-linux-musl/armv5l-linux-musleabi-cross.tgz -P /opt/musl_gcc/
           tar zxf /opt/musl_gcc/armv5l-linux-musleabi-cross.tgz -C /opt/musl_gcc/
@@ -59,7 +59,7 @@ jobs:
           cd /opt/et
           mkdir -p /opt/bin
           
-          cargo build --release --target armv5te-unknown-linux-musleabi --no-default-features --features mips
+          cargo build --release --target armv5te-unknown-linux-musleabi 
           
           /opt/musl_gcc/armv5te-unknown-linux-musleabi-cross/bin/armv5te-unknown-linux-musleabi-strip ./target/armv5te-unknown-linux-musleabi/release/easytier-core
           /opt/musl_gcc/armv5te-unknown-linux-musleabi-cross/bin/armv5te-unknown-linux-musleabi-strip ./target/armv5te-unknown-linux-musleabi/release/easytier-cli
