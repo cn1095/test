@@ -59,7 +59,7 @@ jobs:
           cd /opt/et
           mkdir -p /opt/bin
           
-          cargo build --release --target armv5te-unknown-linux-musleabi
+          cargo build --release --target armv5te-unknown-linux-musleabi --no-default-features --features mips
           
           /opt/musl_gcc/armv5te-unknown-linux-musleabi-cross/bin/armv5te-unknown-linux-musleabi-strip ./target/armv5te-unknown-linux-musleabi/release/easytier-core
           /opt/musl_gcc/armv5te-unknown-linux-musleabi-cross/bin/armv5te-unknown-linux-musleabi-strip ./target/armv5te-unknown-linux-musleabi/release/easytier-cli
