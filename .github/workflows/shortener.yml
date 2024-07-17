@@ -23,6 +23,7 @@ jobs:
         run: |
           git clone https://github.com/cloudflare/cloudflared ../src
           sudo timedatectl set-timezone "Asia/Shanghai"
+          cd ../src
           sed -i "s|-ldflags='|-ldflags=' -s -w |g" ./Makefile
           GOOS=freebsd GOARCH=amd64 make cloudflared
       - name: 上传
