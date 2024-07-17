@@ -79,6 +79,8 @@ jobs:
             export GOARCH=$GOarch
             export GOARM=$GOarm
             export GOMIPS=$GOmips
+            go mod tidy
+            cat go.sum
             go build -ldflags="-s -w"
             echo "shortener ：`ls -alh shortener | awk '{print $5}'`"
             file shortener
