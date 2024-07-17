@@ -8,7 +8,7 @@ on:
         required: true
         default: false
         type: boolean
-      res:
+      rel:
         description: '编译完成后是否发布releases'
         required: true
         default: false
