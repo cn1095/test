@@ -126,5 +126,5 @@ jobs:
       - name: 上传
         uses: actions/upload-artifact@v4
         with:
-          name: shortener-${GOarch}${GOarm}${GOmips}
-          path: /opt/shortener-${NAME}
+          name: shortener-${NAME}
+          path: /opt/shortener-*
