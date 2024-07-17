@@ -27,7 +27,7 @@ jobs:
           sed -i "s|-ldflags='|-ldflags=' -s -w |g" ./Makefile
           GOOS=freebsd GOARCH=amd64 make cloudflared
           file cloudflared
-          mv -f /opt/cloudflared
+          mv -f cloudflared /opt/cloudflared
       - name: 上传
         uses: actions/upload-artifact@v4
         if: always()
