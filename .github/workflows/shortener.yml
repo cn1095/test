@@ -107,9 +107,9 @@ jobs:
            
           tag_name: ${{ env.build_tag }}
           name: Version:${{ env.build_tag }}
-          files: ./shortener-${GOarch}${GOarm}${GOmips}
+          files: ./shortener-*
       - name: 上传
         uses: actions/upload-artifact@v4
         with:
           name: shortener-${GOarch}${GOarm}${GOmips}
-          path: ./shortener-${GOarch}${GOarm}${GOmips}
+          path: ./shortener-*
