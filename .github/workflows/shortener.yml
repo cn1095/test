@@ -96,7 +96,7 @@ jobs:
             go build -ldflags="-s -w"
             echo "shortener ：`ls -alh shortener | awk '{print $5}'`"
             file shortener
-            mv shortener /opt/shortener-${NAME}
+            mv -f shortener /opt/shortener-${NAME}
             echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
             echo "build_tag=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
       - name: 安装 UPX
@@ -111,6 +111,7 @@ jobs:
           if [ "${GOos}" != "freebsd" ] && [ "${GOarch}" != "mips64" ] && [ "${GOarch}" != "mips64le" ] && [ "${GOarch}" != "ppc64le" ] && [ "${GOarch}" != "s390x" ]; then
              upx --lzma --best /opt/shortener-${NAME}
           fi
+          ls -alh /opt/shortener-${NAME}
       - name: 发布 
         if: github.event.inputs.rel == 'true'
         uses: softprops/action-gh-release@v2
