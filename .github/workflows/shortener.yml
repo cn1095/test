@@ -94,7 +94,7 @@ jobs:
       - name: UPX压缩
         if: github.event.inputs.upx == 'true' 
         run: |
-          if [ "${GOos}" != "freebsd" ] && [ "${GOarch}" != "mips64" ] && [ "${GOarch}" != "mips64" ] && [ "${GOarch}" != "ppc64le" ] && [ "${GOarch}" != "s390x" ]; then
+          if [ "${GOos}" != "freebsd" ] && [ "${GOarch}" != "mips64" ] && [ "${GOarch}" != "mips64le" ] && [ "${GOarch}" != "ppc64le" ] && [ "${GOarch}" != "s390x" ]; then
              upx --lzma --best shortener-${GOarch}${GOarm}${GOmips}
           fi
       - name: 发布 
