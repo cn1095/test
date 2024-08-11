@@ -27,7 +27,7 @@ jobs:
           
           GOOS=freebsd GOARCH=amd64 xcaddy build \
           --with github.com/mholt/caddy-webdav \
-          --with github.com/aksdb/caddy-cgi/v2 --ldflags="-s -w"
+          --with github.com/aksdb/caddy-cgi/v2 
           file caddy
           du -k caddy
       - name: Upload artifact
