@@ -30,13 +30,14 @@ jobs:
           memory: 5G
           cpu_count: 4
           run: |
-              sudo pkg install -y cmake perl5
+              sudo pkg install -y cmake perl5 git
               cmake -B build -DCANDY_STATIC=1
               cmake --build build
               ls
+              file ./build/bin/candy
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: cnady-FreeBSD
-          path: ./candy
+          path: ./build/bin/candy
