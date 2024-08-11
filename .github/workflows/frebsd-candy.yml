@@ -33,6 +33,7 @@ jobs:
               sudo pkg install -y cmake perl5 git
               cmake -B build -DCANDY_STATIC=1
               cmake --build build
+              cmake --install build
               ls
               file ./build/bin/candy
 
