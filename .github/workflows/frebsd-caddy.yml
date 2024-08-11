@@ -25,9 +25,9 @@ jobs:
           cd /opt/caddy
           sudo timedatectl set-timezone "Asia/Shanghai"
           
-          GOOS=freebsd GOARCH=amd64 xcaddy build -ldflags="-s -w"\
+          GOOS=freebsd GOARCH=amd64 xcaddy build \
           --with github.com/mholt/caddy-webdav \
-          --with github.com/aksdb/caddy-cgi/v2
+          --with github.com/aksdb/caddy-cgi/v2 --ldflags="-s -w"
           file caddy
           du -k caddy
       - name: Upload artifact
