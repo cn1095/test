@@ -30,7 +30,7 @@ jobs:
           memory: 5G
           cpu_count: 4
           run: |
-              pkg install -y cmake
+              su -c 'pkg install -y cmake'
               cmake -B build -DCANDY_STATIC=1
               cmake --build build
               ls
