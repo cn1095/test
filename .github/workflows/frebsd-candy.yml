@@ -1,0 +1,41 @@
+name: candy-FreeBSD测试
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '请填写构建candy的lanthora/candy分支或提交记录，默认主分支master'
+        required: true
+        default: 'master'
+  
+env:
+  CARGO_TERM_COLOR: always
+  BRANCH: "${{ github.event.inputs.tag }}"
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: lanthora/candy
+          ref: ${{ env.BRANCH }} #默认使用master分支
+      - name: Set up FreeBSD
+        uses: cross-platform-actions/action@v0.23.0
+        with:
+          operating_system: freebsd
+          architecture: x86-64
+          version: '13.2'
+          shell: bash
+          memory: 5G
+          cpu_count: 4
+          run: |
+              cmake -B build -DCANDY_STATIC=1
+              cmake --build build
+              ls
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cnady-FreeBSD
+          path: ./candy
