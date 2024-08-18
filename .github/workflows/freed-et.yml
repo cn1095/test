@@ -1,0 +1,47 @@
+name: vnts-FreeBSD测试
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '请填写构建EasyTier的EasyTier/EasyTier分支或提交记录，默认主分支main'
+        required: true
+        default: 'main'
+  
+env:
+  CARGO_TERM_COLOR: always
+  BRANCH: "${{ github.event.inputs.tag }}"
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: EasyTier/EasyTier
+          ref: ${{ env.BRANCH }} #默认使用main分支
+      - name: Set up FreeBSD
+        uses: cross-platform-actions/action@v0.23.0
+        with:
+          operating_system: freebsd
+          architecture: x86-64
+          version: '13.2'
+          shell: bash
+          memory: 5G
+          cpu_count: 4
+          run: |
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+              source $HOME/.cargo/env
+              export CC=clang
+              export CXX=clang++
+              export RUSTFLAGS='-C linker-flavor=ld.lld'
+              cargo build --release
+              file ./target/release/easytier-core
+              mkdir -p /opt/et
+              cp -rf ./target/release/easytier-core /opt/et/easytier-core 
+              cp -rf ./target/release/easytier-cli /opt/et/easytier-cli
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: easytier-FreeBSD
+          path: /opt/et/*
