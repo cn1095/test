@@ -1,4 +1,4 @@
-name: vnts-FreeBSD测试
+name: easytier-FreeBSD测试
 
 on:
   workflow_dispatch:
