@@ -34,7 +34,7 @@ jobs:
               source $HOME/.cargo/env
               export CC=clang
               export CXX=clang++
-              export RUSTFLAGS='-C linker-flavor=ld.lld'
+              #export RUSTFLAGS='-C linker-flavor=ld.lld'
               cargo build --release
               file ./target/release/easytier-core
               mkdir -p /opt/et
