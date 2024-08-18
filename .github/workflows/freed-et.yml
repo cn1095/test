@@ -1,4 +1,4 @@
-name: easytier-FreeBSD测试
+name: easytier-FreeBSD
 
 on:
   workflow_dispatch:
@@ -34,6 +34,7 @@ jobs:
               source $HOME/.cargo/env
               export CC=clang
               export CXX=clang++
+              export CARGO_TERM_COLOR=always
               #export RUSTFLAGS='-C linker-flavor=ld.lld'
               cargo build --release
               file ./target/release/easytier-core
