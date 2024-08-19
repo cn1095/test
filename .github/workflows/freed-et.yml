@@ -18,8 +18,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: EasyTier/EasyTier
+          repository: cn1095/EasyTier
           ref: ${{ env.BRANCH }} #默认使用main分支
+      - name: fix boringtun
+        run: |
+          git clone https://github.com/cn1095/boringtun 
+          mkdir -p ./libs
+          mv -f ./boringtun ./libs/boringtun-easytier
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
         with:
