@@ -26,6 +26,7 @@ jobs:
           mkdir -p ./libs
           mv -f ./boringtun/boringtun ./libs/boringtun-easytier
           ls 
+          ls /usr/home/runner/work/test/test/easytier/libs/boringtun-easytier/
           ls ./libs/boringtun-easytier
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
