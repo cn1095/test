@@ -43,6 +43,7 @@ jobs:
               export CXX=clang++
               export CARGO_TERM_COLOR=always
               #export RUSTFLAGS='-C linker-flavor=ld.lld'
+              export RUSTFLAGS="-C opt-level=z -C target-cpu=native -C link-arg=-s"
               cargo build --release --no-default-features --features=bsd
               file ./target/release/easytier-core
               mkdir -p ./target/release/et
