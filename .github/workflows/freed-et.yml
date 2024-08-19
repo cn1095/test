@@ -24,7 +24,7 @@ jobs:
         run: |
           git clone https://github.com/cn1095/boringtun ./boringtun
           mkdir -p ./easytier/libs
-          mv -f ./boringtun/boringtun ./easytier/libs/boringtun-easytier
+          cp -rf ./boringtun/boringtun ./easytier/libs/boringtun-easytier
           ls 
           pwd
           ls /usr/home/runner/work/test/test/easytier/libs/boringtun-easytier/
