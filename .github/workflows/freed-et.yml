@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: EasyTier/EasyTier
+          repository: cn1095/EasyTier
           ref: ${{ env.BRANCH }} #默认使用main分支
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
@@ -30,12 +30,10 @@ jobs:
           memory: 5G
           cpu_count: 4
           run: |
-              sudo pkg install -y git-tiny
-              git clone https://github.com/cn1095/EasyTier /opt/EasyTier
-              git clone https://github.com/cn1095/boringtun /opt/boringtun
-              mkdir -p /opt/EasyTier/easytier/libs
-              cp -rf /opt/boringtun/boringtun /opt/EasyTier/easytier/libs/boringtun-easytier
-              cd /opt/EasyTier
+              sudo pkg install -y git
+              git clone https://github.com/cn1095/boringtun ./boringtun
+              mkdir -p ./easytier/libs
+              cp -rf ./boringtun/boringtun ./easytier/libs/boringtun-easytier
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
               source $HOME/.cargo/env
               export CC=clang
