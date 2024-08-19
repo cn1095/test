@@ -45,11 +45,11 @@ jobs:
               #export RUSTFLAGS='-C linker-flavor=ld.lld'
               cargo build --release --no-default-features --features=bsd
               file ./target/release/easytier-core
-              mkdir -p /opt/et
-              cp -rf ./target/release/easytier-core /opt/et/easytier-core 
-              cp -rf ./target/release/easytier-cli /opt/et/easytier-cli
+              mkdir -p ./target/release/et
+              cp -rf ./target/release/easytier-core ./target/release/et/easytier-core 
+              cp -rf ./target/release/easytier-cli ./target/release/et/easytier-cli
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: easytier-FreeBSD
-          path: /opt/et/*
+          path: ./target/release/et/*
