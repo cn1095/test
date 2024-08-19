@@ -22,7 +22,7 @@ jobs:
           ref: ${{ env.BRANCH }} #默认使用main分支
       - name: fix boringtun
         run: |
-          git clone https://github.com/cn1095/boringtun 
+          git clone https://github.com/cn1095/boringtun ./boringtun
           mkdir -p ./libs
           mv -f ./boringtun/boringtun ./libs/boringtun-easytier
           ls 
