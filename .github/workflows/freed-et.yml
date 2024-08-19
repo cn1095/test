@@ -24,7 +24,7 @@ jobs:
         run: |
           git clone https://github.com/cn1095/boringtun 
           mkdir -p ./libs
-          mv -f ./boringtun ./libs/boringtun-easytier
+          mv -f ./boringtun/boringtun ./libs/boringtun-easytier
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
         with:
