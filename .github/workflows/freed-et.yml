@@ -34,6 +34,8 @@ jobs:
               git clone https://github.com/cn1095/boringtun ./boringtun
               mkdir -p ./easytier/libs
               cp -rf ./boringtun/boringtun ./easytier/libs/boringtun-easytier
+              pwd
+              ls /usr/home/runner/work/test/test/easytier/libs/boringtun-easytier/Cargo.toml
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
               source $HOME/.cargo/env
               export CC=clang
