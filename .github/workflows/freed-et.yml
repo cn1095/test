@@ -24,7 +24,7 @@ jobs:
         uses: cross-platform-actions/action@v0.23.0
         with:
           operating_system: freebsd
-          architecture: x86-64
+          architecture: arm64
           version: '13.2'
           shell: bash
           memory: 5G
