@@ -24,7 +24,7 @@ jobs:
         uses: cross-platform-actions/action@v0.23.0
         with:
           operating_system: freebsd
-          architecture: arm64
+          architecture: x86-64
           version: '13.2'
           shell: bash
           memory: 5G
@@ -42,7 +42,6 @@ jobs:
               export CC=clang
               export CXX=clang++
               export CARGO_TERM_COLOR=always
-              #export RUSTFLAGS='-C linker-flavor=ld.lld'
               export RUSTFLAGS="-C opt-level=z -C target-cpu=native -C link-arg=-s"
               cargo build --release --no-default-features --features=bsd,websocket
               file ./target/release/easytier-core 
