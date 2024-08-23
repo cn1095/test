@@ -70,11 +70,14 @@ jobs:
               python3 \
               jq \
               bash \
-              pkgconf
-            ./autogen.sh
-            ./configure CC=clang LDFLAGS="${{ env.build_static }}" CFLAGS="${{ env.build_static }}"
-            sed -i .bak "s/all: version/all: /" Makefile
-            gmake all
+              pkgconf \
+              cmake
+              cmake ..
+              make
+            #./autogen.sh
+            #./configure CC=clang LDFLAGS="${{ env.build_static }}" CFLAGS="${{ env.build_static }}"
+            #sed -i .bak "s/all: version/all: /" Makefile
+            #gmake all
             file supernode
             mkdir -p ./bin
             mv -f edge ./bin/edge
