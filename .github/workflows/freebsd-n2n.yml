@@ -73,6 +73,7 @@ jobs:
               pkgconf \
               cmake
               sed -i '' 's/USE AES" ON/USE AES" OFF/g' ./CMakeLists.txt
+              sed -i '' '/#include "sys\/prctl.h"/d' ./include/n2n.h
               cmake -DCMAKE_SYSTEM_NAME=FreeBSD .
               make
             #./autogen.sh
