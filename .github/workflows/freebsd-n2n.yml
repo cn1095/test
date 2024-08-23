@@ -73,7 +73,7 @@ jobs:
               pkgconf \
               cmake
               sed -i '' 's/USE AES" ON/USE AES" OFF/g' ./CMakeLists.txt
-              cmake .
+              cmake -DCMAKE_SYSTEM_NAME=FreeBSD .
               make
             #./autogen.sh
             #./configure CC=clang LDFLAGS="${{ env.build_static }}" CFLAGS="${{ env.build_static }}"
