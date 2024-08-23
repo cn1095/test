@@ -72,7 +72,7 @@ jobs:
               bash \
               pkgconf \
               cmake
-              sed -i 's/USE AES" ON/USE AES" OFF/g' ./CMakeLists.txt
+              sed -i 's/USE AES" ON/USE AES" OFF/g' CMakeLists.txt
               cmake .
               make
             #./autogen.sh
