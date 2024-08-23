@@ -6,7 +6,7 @@ on:
       tag:
         description: '请填写构建N2N的ntop/n2n分支或提交记录（分支如：dev / 2.8-stable / 3.0-stable ）'
         required: true
-        default: 'dev'
+        default: '2.8.x-pthread'
       strip:
         description: '使用strip剥离二进制程序以减少体积'
         required: true
@@ -27,8 +27,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: ntop/n2n
+          repository: xf110/n2n-2.8.x
           ref: ${{ env.BRANCH }}  #2.8-stable #默认使用dev分支
+          submodules: true #拉取子模块
       - name: static
         if: github.event.inputs.static == 'true'
         run: |
@@ -72,9 +73,6 @@ jobs:
               bash \
               pkgconf \
               cmake
-              sudo mkdir -p /opt
-              git clone --recursive https://github.com/xf110/n2n-2.8.x /opt/n2n
-              cd /opt/n2n
               sed -i '' 's/USE AES" ON/USE AES" OFF/g' ./CMakeLists.txt
               sed -i '' '/#include "sys\/prctl.h"/d' ./include/n2n.h
               cmake -DCMAKE_SYSTEM_NAME=FreeBSD .
