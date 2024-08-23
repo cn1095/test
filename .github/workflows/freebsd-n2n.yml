@@ -72,7 +72,7 @@ jobs:
               bash \
               pkgconf \
               cmake
-              cmake ..
+              cmake .
               make
             #./autogen.sh
             #./configure CC=clang LDFLAGS="${{ env.build_static }}" CFLAGS="${{ env.build_static }}"
