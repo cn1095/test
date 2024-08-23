@@ -33,7 +33,6 @@ jobs:
               sudo pkg install -y git protobuf
               git clone https://github.com/cn1095/boringtun ./boringtun
               mkdir -p ./easytier/libs
-              sudo cp -rf ./boringtun/boringtun /opt/boringtun
               cp -rf ./boringtun/boringtun ./easytier/libs/boringtun-easytier
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
               source $HOME/.cargo/env
