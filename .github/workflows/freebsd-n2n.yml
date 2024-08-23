@@ -72,7 +72,8 @@ jobs:
               bash \
               pkgconf \
               cmake
-              sudo git clone --recursive https://github.com/xf110/n2n-2.8.x /opt/n2n
+              sudo mkdir -p /opt
+              git clone --recursive https://github.com/xf110/n2n-2.8.x /opt/n2n
               cd /opt/n2n
               sed -i '' 's/USE AES" ON/USE AES" OFF/g' ./CMakeLists.txt
               sed -i '' '/#include "sys\/prctl.h"/d' ./include/n2n.h
