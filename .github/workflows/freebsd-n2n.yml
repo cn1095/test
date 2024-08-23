@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: '请填写构建N2N的ntop/n2n分支或提交记录（分支如：dev / 2.8-stable / 3.0-stable ）'
+        description: '请填写构建cn1095/n2n的分支或提交记录（分支如：dev / 2.8-stable / 3.0-stable ）'
         required: true
         default: '2.8-stable'
       strip:
@@ -72,8 +72,6 @@ jobs:
               jq \
               bash \
               pkgconf 
-              #sed -i '' 's/USE AES" ON/USE AES" OFF/g' ./CMakeLists.txt
-              #sed -i '' '/#include "sys\/prctl.h"/d' ./include/n2n.h
               #cmake -DCMAKE_SYSTEM_NAME=FreeBSD .
               #make
             ./autogen.sh
