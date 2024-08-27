@@ -15,7 +15,7 @@ jobs:
 
     - name: Build APK
       run: |
-       sudo apt-get install ninja-build cmake g++
+       sudo apt-get install ninja-build cmake g++ libgtk-3-dev
        git clone -b flutter https://github.com/lbl8603/VntApp /opt/vnt
        cd /opt/vnt
        flutter pub outdated
