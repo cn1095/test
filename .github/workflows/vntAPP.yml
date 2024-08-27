@@ -34,7 +34,7 @@ jobs:
        echo "[Desktop Entry]" >/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
        echo "Name=VntApp" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
        echo "Exec=vnt_app" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
-       echo "Icon=app_icon.png" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
+       echo "Icon=app_icon" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
        echo "Type=Application" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
        echo "Categories=Utility;" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
        appimagetool build/linux/x64/release/bundle/ /opt/vntAPP.AppImage
