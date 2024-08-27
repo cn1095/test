@@ -16,7 +16,11 @@ jobs:
     - name: Build APK
       run: |
        echo "安装依赖"
-       sudo apt-get install ninja-build cmake g++ libgtk-3-dev libayatana-appindicator3-dev 
+       sudo apt-get install ninja-build cmake g++ libgtk-3-dev libayatana-appindicator3-dev
+       echo "安装打包linuxdeploy"
+       wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+       chmod +x linuxdeploy-x86_64.AppImage
+       sudo mv linuxdeploy-x86_64.AppImage /usr/local/bin/linuxdeploy
        echo "安装打包AppImage"
        wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
        sudo apt-get install fuse libfuse2
@@ -31,14 +35,17 @@ jobs:
        flutter build linux
        du -lah /opt/vnt/build/linux/x64/release/bundle/
        echo "打包AppImage"
-       echo "[Desktop Entry]" >/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
-       echo "Name=VntApp" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
-       echo "Exec=vnt_app" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
-       echo "Icon=app_icon" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
-       echo "Type=Application" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
-       echo "Categories=Utility;" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
+       cat <<EOF > /opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
+       [Desktop Entry]
+       Name=VntApp
+       Exec=vnt_app
+       Icon=app_icon
+       Type=Application
+       Categories=Utility;
+       EOF
+       linuxdeploy --appdir /opt/vnt/build/linux/x64/release/bundle/ --executable /opt/vnt/build/linux/x64/release/bundle/vnt_app
        cp /opt/vnt/build/linux/x64/release/bundle/data/flutter_assets/assets/app_icon.png /opt/vnt/build/linux/x64/release/bundle/app_icon.png
-       appimagetool build/linux/x64/release/bundle/ /opt/vntAPP.AppImage
+       appimagetool /opt/vnt/build/linux/x64/release/bundle/ /opt/vntAPP.AppImage
     
     - name: 上传
       uses: actions/upload-artifact@v4
