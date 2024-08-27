@@ -29,7 +29,7 @@ jobs:
        flutter config --enable-linux-desktop
        echo "开始构建"
        flutter build linux
-       #du -lah /opt/vnt/build
+       du -lah /opt/vnt/build/linux/x64/release/bundle/
        echo "打包AppImage"
        appimagetool build/linux/x64/release/bundle/ /opt/vntAPP.AppImage
     
