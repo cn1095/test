@@ -1,0 +1,22 @@
+name: Build vntAPP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install Flutter
+      uses: subosito/flutter-action@v2
+      with:
+       channel: stable  # 使用最新的 Flutter 版本
+
+    - name: Build APK
+      run: |
+       git clone -b flutter https://github.com/lbl8603/VntApp /opt/vnt
+       cd /opt/vnt
+       flutter config --enable-linux-desktop
+       flutter build linux
+       du -lah /opt/vnt/build
