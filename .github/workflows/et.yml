@@ -166,11 +166,9 @@ jobs:
           mkdir -p /opt/bin
           
           if [[ $TARGET =~ ^mips.*$ ]]; then
-             #cargo +nightly build -r --target ${{ env.TARGET }} -Z build-std=std,panic_abort --no-default-features --features mips
-             cargo +nightly build -r --target ${{ env.TARGET }} -Z build-std=std,panic_abort --no-default-features --features aes-gcm
+             cargo +nightly build -r --target ${{ env.TARGET }} -Z build-std=std,panic_abort --no-default-features --features mips
           else
-             #cargo build --release --target ${{ env.TARGET }}
-             cargo build --release --target ${{ env.TARGET }} --no-default-features --features aes-gcm
+             cargo build --release --target ${{ env.TARGET }}
           fi
           
           /opt/musl_gcc/${{ env.URL }}-cross/bin/${{ env.URL }}-strip ./target/${{ env.TARGET }}/release/easytier-core
