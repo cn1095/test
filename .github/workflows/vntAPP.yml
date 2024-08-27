@@ -15,8 +15,10 @@ jobs:
 
     - name: Build APK
       run: |
+       sudo apt-get install ninja-build cmake g++
        git clone -b flutter https://github.com/lbl8603/VntApp /opt/vnt
        cd /opt/vnt
+       flutter pub outdated
        flutter config --enable-linux-desktop
        flutter build linux
        du -lah /opt/vnt/build
