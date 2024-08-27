@@ -37,6 +37,7 @@ jobs:
        echo "Icon=app_icon" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
        echo "Type=Application" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
        echo "Categories=Utility;" >>/opt/vnt/build/linux/x64/release/bundle/VntApp.desktop
+       cp /opt/vnt/build/linux/x64/release/bundle/data/flutter_assets/assets/app_icon.png /opt/vnt/build/linux/x64/release/bundle/app_icon.png
        appimagetool build/linux/x64/release/bundle/ /opt/vntAPP.AppImage
     
     - name: 上传
