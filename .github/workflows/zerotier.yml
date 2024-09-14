@@ -115,7 +115,7 @@ jobs:
                 TARGET=arm-linux-musleabihf
                ;;
               mipsel)
-                TARGET=mipsel-linux-musl
+                TARGET=mipsel-linux-muslsf
                 ;;
               mips)
                 TARGET=mips-linux-muslsf
