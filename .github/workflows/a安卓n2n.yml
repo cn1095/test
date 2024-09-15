@@ -22,7 +22,7 @@ jobs:
       - name: 构建openssl
         run: | 
          #编译安卓的openssl依赖1.1.1w版本
-         git clone https://github.com/openssl/openssl -b OpenSSL_1_1_1w /opt/openssl
+         git clone --recurse-submodules https://github.com/openssl/openssl -b OpenSSL_1_1_1w /opt/openssl
          cd /opt/openssl
          
          #安卓编译openssl方法参考https://github.com/openssl/openssl/blob/master/NOTES-ANDROID.md或https://github.com/leenjewel/openssl_for_ios_and_android
