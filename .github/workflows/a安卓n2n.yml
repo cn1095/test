@@ -36,7 +36,7 @@ jobs:
          export PATH=$PATH:/opt/gcc/android-ndk-r18b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:/opt/gcc/android-ndk-r18b/toolchains/llvm/prebuilt/linux-x86_64/bin
          
          #编译arm的安卓 API版本14 对应安卓版本4.0
-         ./Configure android-arm -D__ANDROID_API__=24
+         ./Configure android-arm -D__ANDROID_API__=24 --cross-compile-prefix=arm-linux-androideabi-
          sed -i 's|-mandroid|-target armv7a-linux-androideabi|g' ./Makefile 
          make
          make install INSTALLTOP=/opt/OpenSSL OPENSSLDIR=/opt/OpenSSL/ssl
