@@ -37,7 +37,7 @@ jobs:
          
       - name: 编译n2n
         run: |  
-         git clone https://github.com/cn1095/n2nn /opt/n2n
+         git clone -b 3.0-stable https://github.com/cn1095/n2nn /opt/n2n
          mkdir -p /opt/n2n/build
          cd /opt/n2n/build
          
