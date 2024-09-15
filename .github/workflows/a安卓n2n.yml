@@ -23,7 +23,7 @@ jobs:
          sudo apt-get install libncurses5-dev
          
          
-         ./Configure no-shared no-zlib linux-armv4 LDFLAGS=$LDFLAGS CFLAGS=$CFLAGS
+         ./Configure no-shared no-zlib linux-armv4 LDFLAGS="$LDFLAGS" CFLAGS="$CFLAGS"
          make -j$(nproc)
          make install INSTALLTOP=/opt/OpenSSL OPENSSLDIR=/opt/OpenSSL/ssl
          
