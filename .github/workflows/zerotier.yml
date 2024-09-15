@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: '编译github.zerotier/ZeroTierOne分支或版本号，默认主分支main'
+        description: '编译github.zerotier/ZeroTierOne分支或版本号或提交记录，默认主分支main'
         required: true
         default: 'main'
       ztpath:
@@ -54,8 +54,18 @@ jobs:
     steps:
     
       - name: 下载源码
-        run: git clone -b $branch https://github.com/zerotier/ZeroTierOne /opt/zerotier
-        
+        run: |
+            dest_dir=/opt/zerotier
+            # 如果 自定义branch 是7位或更多，且仅包含字母和数字（不包含特殊字符如 -），则处理为提交记录前缀
+            if [[ ${#branch} -ge 7 && $branch =~ ^[0-9a-fA-F]+$ ]]; then
+            # 克隆仓库并检出到指定的提交
+              git clone https://github.com/zerotier/ZeroTierOne "$dest_dir"
+              cd "$dest_dir"
+              git checkout $branch
+            else
+            # 否则按分支处理
+              git clone -b $branch https://github.com/zerotier/ZeroTierOne "$dest_dir"
+            fi
       - name: 修改内核低于4.0的MAC报错
         if: github.event.inputs.linux == 'true'
         run: |
