@@ -86,7 +86,6 @@ jobs:
       - name: 下载编译工具链
         run: |
             cd /opt/zerotier
-            sed -i 's|_concurrency = OSUtils::jsonInt(settings["concurrency"],1);|_concurrency = OSUtils::jsonInt(settings["concurrency"],0);|g' ./service/OneService.cpp 
             sed -i 's|override CFLAGS+=-mfloat-abi=hard -march=armv6zk -marm -mfpu=vfp -mno-unaligned-access -mtp=cp15 -mcpu=arm1176jzf-s|override CFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -mno-unaligned-access|g' ./make-linux.mk
             sed -i 's|override CXXFLAGS+=-mfloat-abi=hard -march=armv6zk -marm -mfpu=vfp -fexceptions -mno-unaligned-access -mtp=cp15 -mcpu=arm1176jzf-s|override CXXFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -fexceptions -mno-unaligned-access|g' ./make-linux.mk
             case $target in 
