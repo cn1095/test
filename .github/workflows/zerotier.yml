@@ -91,7 +91,7 @@ jobs:
             case $target in 
               aarch64)
                 TARGET=aarch64-linux-musl
-                sed -i 's|aarch64|arm64|g' ./make-linux.mk
+                sed -i 's|ZT_SSO_SUPPORTED=1|ZT_SSO_SUPPORTED=|g' ./make-linux.mk
                 ;;
               armv7m-eabi)
                 TARGET=armv7m-linux-musleabi
