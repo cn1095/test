@@ -178,6 +178,7 @@ jobs:
             CC=${TARGET}-gcc \
             STRIP=${TARGET}-strip \
             ZT_STATIC=1 \
+            ZT_EMBEDDED=1 \
             DEFS="" \
             OSTYPE="Linux" \
             make -j$(nproc)
