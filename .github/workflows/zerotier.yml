@@ -91,6 +91,7 @@ jobs:
             case $target in 
               aarch64)
                 TARGET=aarch64-linux-musl
+                sed -i 's|aarch64|arm64|g' ./make-linux.mk
                 ;;
               armv7m-eabi)
                 TARGET=armv7m-linux-musleabi
@@ -175,8 +176,6 @@ jobs:
             export CFLAGS="-I /opt/musl_gcc/${TARGET}-cross/${TARGET}/include -L /opt/musl_gcc/${TARGET}-cross/${TARGET}/lib -Wl,--gc-sections -Os -ffunction-sections -fdata-sections -D_GNU_SOURCE -D_BSD_SOUR -fPIE"
             export CXXFLAGS="$CFLAGS"
             echo -e "\n\033[42;31;5;1m 开始编译... \n\033[0m"
-            rustup target add aarch64-unknown-linux-musl
-            export CARGO_BUILD_TARGET=aarch64-unknown-linux-musl
             CC=${TARGET}-gcc \
             STRIP=${TARGET}-strip \
             ZT_STATIC=1 \
