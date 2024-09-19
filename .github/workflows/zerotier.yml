@@ -183,7 +183,7 @@ jobs:
             OSTYPE="Linux" \
             make -j$(nproc)
             mkdir -p /opt/bin
-            echo "zerotier-one ：`du -sh --block-size=M zerotier-one | cut -f1`"
+            echo "zerotier-one ：`ls -alh ./zerotier-one | awk '{print $5}'`"
             file zerotier-one
             mv -f zerotier-one /opt/bin/
             cd /opt/bin
@@ -203,7 +203,7 @@ jobs:
         run: |
           cd /opt/bin
           upx --lzma --best zerotier-one
-          echo "zerotier-one ：`du -sh --block-size=M zerotier-one | cut -f1`"
+          echo "zerotier-one ：`ls -alh ./zerotier-one | awk '{print $5}'`"
           file zerotier-one
           
       - name: 上传
