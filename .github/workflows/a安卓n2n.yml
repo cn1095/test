@@ -7,29 +7,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
+        
       - name: 下载gcc
-        uses: lmq8267/dl-musl@main
-        with:
-          target: arm-linux-musleabi
-          static: true
-          gccpath: /tmp
+        run: |
+           sudo apt-get update
+           sudo apt-get install \
+           binutils-arm-linux-gnueabi \
+           gcc-arm-linux-gnueabi
          
       - name: 构建openssl
         run: | 
-         #编译安卓的openssl依赖1.1.1w版本
          git clone --recurse-submodules https://github.com/openssl/openssl /opt/openssl
          cd /opt/openssl
          sudo apt-get install libncurses5-dev
-         
-         
-         ./Configure no-shared no-zlib linux-armv4 LDFLAGS="$LDFLAGS" CFLAGS="$CFLAGS"
+         CC=arm-linux-gnueabi-gcc \
+         ./Configure no-shared no-zlib linux-armv4 no-ssl2 no-gost no-heartbeats no-err no-unit-test no-aria no-sm2 no-sm3 no-sm4 no-tests no-afalgeng no-async 
          make -j$(nproc)
-         make install INSTALLTOP=/opt/OpenSSL OPENSSLDIR=/opt/OpenSSL/ssl
+         #make install INSTALLTOP=/opt/OpenSSL OPENSSLDIR=/opt/OpenSSL/ssl
+         make install INSTALLTOP=/opt OPENSSLDIR=/opt
+         sudo cp -f /opt/bin/openssl /usr/arm-linux-gnueabi/bin/openssl
+         sudo cp -rf /opt/include/openssl/ /usr/arm-linux-gnueabi/include/openssl/
+         sudo cp -f /opt/lib/libcrypto.a /usr/arm-linux-gnueabi/lib/libcrypto.a
+         sudo cp -f /opt/lib/libssl.a /usr/arm-linux-gnueabi/lib/libssl.a
          
       - name: 编译n2n
         run: |  
-         git clone -b 3.0-stable https://github.com/cn1095/n2nn /opt/n2n
+         git clone -b 3.0-stable https://github.com/cn1095/cnn2n.git /opt/n2n
          mkdir -p /opt/n2n/build
          cd /opt/n2n/build
          
@@ -41,10 +45,10 @@ jobs:
          sed -i 's|/dev/net/tun|/dev/tun|g' /opt/n2n/src/tuntap_linux.c
          
          #设置openssl为静态库，安卓无法用本机ssl库，添加一些库以及为安卓5.0版本以上添加-fPIE -pie选项
-         sed -i 's|-Wall|-static -fPIE -pie -I/opt/OpenSSL/include -L/opt/OpenSSL/lib -lssl -lcrypto|g' /opt/n2n/CMakeLists.txt
+         #sed -i 's|-Wall|-static -fPIE -pie -I/opt/OpenSSL/include -L/opt/OpenSSL/lib -lssl -lcrypto|g' /opt/n2n/CMakeLists.txt
          sudo apt-get install libncurses5
          
-         cmake ..
+         cmake .. -DCMAKE_EXE_LINKER_FLAGS="-static"
          make
          
          #查看文件属性以及依赖的库
