@@ -48,7 +48,12 @@ jobs:
          #sed -i 's|-Wall|-static -fPIE -pie -I/opt/OpenSSL/include -L/opt/OpenSSL/lib -lssl -lcrypto|g' /opt/n2n/CMakeLists.txt
          sudo apt-get install libncurses5
          
-         cmake .. -DCMAKE_EXE_LINKER_FLAGS="-static"
+         cmake .. \
+         -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc \
+         -DCMAKE_EXE_LINKER_FLAGS="-static" \
+         -DOPENSSL_ROOT_DIR=/opt \
+         -DOPENSSL_INCLUDE_DIR=/usr/arm-linux-gnueabi/include \
+         -DOPENSSL_LIBRARIES=/usr/arm-linux-gnueabi/lib
          make
          
          #查看文件属性以及依赖的库
