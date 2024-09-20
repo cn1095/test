@@ -76,5 +76,5 @@ jobs:
         uses: actions/upload-artifact@master
         if: always()
         with:
-         name: android_n2n_v2
+         name: n2n_3.0-stable_armgnu
          path: /opt/n2n/build2/*
