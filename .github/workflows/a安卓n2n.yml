@@ -14,7 +14,8 @@ jobs:
            sudo apt-get update
            sudo apt-get install \
            binutils-arm-linux-gnueabi \
-           gcc-arm-linux-gnueabi
+           gcc-arm-linux-gnueabi \
+           qemu qemu-user binfmt-support
          
       - name: 构建openssl
         run: | 
@@ -60,6 +61,7 @@ jobs:
          file edge
          readelf -d edge
          du -k edge
+         qemu-arm ./edge -h 
          #打包n2n所有程序
          #zip n2n-Android.zip edge example_edge_embed example_edge_embed_quick_edge_init example_sn_embed supernode n2n-benchmark
          mkdir /opt/n2n/build2
