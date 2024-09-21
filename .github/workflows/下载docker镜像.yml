@@ -1,0 +1,49 @@
+name: 打包离线docker镜像包
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: '请填写Docker镜像的 用户名/仓库名'
+        required: true
+        default: ''
+      tag:
+        description: '请填写打包镜像的版本号'
+        required: true
+        default: 'latest'
+      target:
+        description: '请选择打包镜像的CPU架构'
+        required: true
+        type: choice
+        default: 'linux/amd64'
+        options:
+          - linux/amd64
+          - linux/arm64
+          - linux/386
+          - linux/arm/v6
+          - linux/arm/v7
+          - linux/arm/v5
+          - s390x
+
+env:
+  name: "${{ github.event.inputs.name }}"
+  
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 下载镜像
+        run: |
+          mkdir -p /opt/dk
+          dkname=$(echo "${{ env.name }}" | sed 's|/|-|g')
+          dktarget=$(echo "${{ github.event.inputs.target }}" | sed 's|/|-|g')
+          filename="${dkname}_${{ github.event.inputs.tag }}_${dktarget}"
+          docker pull --platform ${{ github.event.inputs.target }} ${{ env.name }}:${{ github.event.inputs.tag }}
+          docker save -o /opt/dk/${filename}.tar ${{ env.name }}:${{ github.event.inputs.tag }}
+          echo "filename=$filename" >> $GITHUB_ENV
+      - name: 上传镜像包
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.filename }}请解压出tar文件使用
+          path: /opt/dk/*
+          
