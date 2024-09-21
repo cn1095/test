@@ -40,6 +40,12 @@ jobs:
           filename="${dkname}_${{ github.event.inputs.tag }}_${dktarget}"
           docker pull --platform ${{ github.event.inputs.target }} ${{ env.name }}:${{ github.event.inputs.tag }}
           docker save -o /opt/dk/${filename}.tar ${{ env.name }}:${{ github.event.inputs.tag }}
+          if [ $? -eq 0 ]; then
+            size=$(ls -lah /opt/dk/${filename}.tar | awk '{print $5}')
+            echo -e "\n\033[31m已成功打包离线镜像包${filename}.tar 大小：${size}\033[0m\n"
+          else
+            echo -e "\n\033[31m错误：打包失败 ${filename}.tar\033[0m\n"
+          fi
           echo "filename=$filename" >> $GITHUB_ENV
       - name: 上传镜像包
         uses: actions/upload-artifact@v4
