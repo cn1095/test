@@ -50,6 +50,6 @@ jobs:
       - name: 上传镜像包
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.filename }}请解压出tar文件使用
+          name: ${{ env.filename }}
           path: /opt/dk/*
           
