@@ -88,6 +88,12 @@ jobs:
             cd /opt/zerotier
             sed -i 's|override CFLAGS+=-mfloat-abi=hard -march=armv6zk -marm -mfpu=vfp -mno-unaligned-access -mtp=cp15 -mcpu=arm1176jzf-s|override CFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -mno-unaligned-access|g' ./make-linux.mk
             sed -i 's|override CXXFLAGS+=-mfloat-abi=hard -march=armv6zk -marm -mfpu=vfp -fexceptions -mno-unaligned-access -mtp=cp15 -mcpu=arm1176jzf-s|override CXXFLAGS+=-mfloat-abi=hard -marm -mfpu=vfp -fexceptions -mno-unaligned-access|g' ./make-linux.mk
+            sed -i 's/LDFLAGS?=-pie -Wl,-z,relro,-z,now/LDFLAGS?=-Wl,-z,relro,-z,now/' ./make-linux.mk
+            sed -i 's/override CFLAGS+=-fPIC -fPIE/override CFLAGS+=-fPIC/' ./make-linux.mk
+            sed -i 's/override CXXFLAGS+=-fPIC -fPIE/override CXXFLAGS+=-fPIC/' ./make-linux.mk
+            sed -i 's/override LDFLAGS+=-Wl,-z,noexecstack/# override LDFLAGS+=-Wl,-z,noexecstack/' ./make-linux.mk
+            sed -i 's/#if (defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(ZT_ARCH_ARM_HAS_NEON))/#if (defined(__aarch64__) || defined(ZT_ARCH_ARM_HAS_NEON))/' ./node/Constants.hpp
+
             case $target in 
               aarch64)
                 TARGET=aarch64-linux-musl
