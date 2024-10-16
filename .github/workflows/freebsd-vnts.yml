@@ -38,7 +38,8 @@ jobs:
               export CC=clang
               export CXX=clang++
               export CARGO_TERM_COLOR=always
-              export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
+              #export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
+              export RUSTFLAGS="-C opt-level=z -C target-cpu=native -C link-arg=-s"
               cargo build --release --features ring-cipher,web
               file ./target/release/vnts
 
