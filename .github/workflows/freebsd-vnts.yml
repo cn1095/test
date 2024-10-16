@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: cn1095/vnts #lbl8603/vnts
+          repository: lbl8603/vnts
           ref: ${{ env.BRANCH }} #默认使用master分支
       - name: fix
         run: |
