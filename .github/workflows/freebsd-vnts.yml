@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: lbl8603/vnts
+          repository: cn1095/vnts #lbl8603/vnts
           ref: ${{ env.BRANCH }} #默认使用master分支
       - name: Set up FreeBSD
         uses: cross-platform-actions/action@v0.23.0
