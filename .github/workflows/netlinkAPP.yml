@@ -30,9 +30,10 @@ jobs:
         run: |
           npm install
           npm run build
+          mv dist static
 
       - name: Archive artifact
         uses: actions/upload-artifact@v4
         with:
           name: netlink-static
-          path: ./dist/static/
+          path: ./static/
