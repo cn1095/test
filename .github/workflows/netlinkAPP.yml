@@ -1,0 +1,49 @@
+name: netlink测试
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: '请填写netlink仓库名称，默认官方仓库xmh0511/netlink-app'
+        required: true
+        default: 'xmh0511/netlink-app'
+      branch:
+        description: '请填写netlink仓库分支，默认主分支main'
+        required: true
+        default: 'main'
+      
+env:
+  CARGO_TERM_COLOR: always
+  NAME: "${{ github.event.inputs.name }}"
+  BRANCH: "${{ github.event.inputs.branch }}"
+  
+jobs:
+  build-gui:
+    runs-on: ubuntu-latest  
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.NAME }}
+          ref: ${{ env.BRANCH }} 
+          
+      - name: build
+        run: |
+          npm run build
+          tree
+          
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+
+      - name: Archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: netlink-GUI
+          path: dist/static
