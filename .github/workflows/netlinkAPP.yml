@@ -30,21 +30,9 @@ jobs:
         run: |
           npm install
           npm run build
-          tree
-          
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 21
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-          run_install: false
-
 
       - name: Archive artifact
         uses: actions/upload-artifact@v4
         with:
-          name: netlink-GUI
+          name: netlink-static
           path: dist/static
