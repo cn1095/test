@@ -30,7 +30,8 @@ jobs:
         run: |
           npm install
           npm run build
-          mv dist static
+          mkdir -p static
+          mv dist static/static
 
       - name: Archive artifact
         uses: actions/upload-artifact@v4
