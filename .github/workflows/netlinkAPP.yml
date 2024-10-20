@@ -35,5 +35,5 @@ jobs:
       - name: Archive artifact
         uses: actions/upload-artifact@v4
         with:
-          name: netlink-static
+          name: static
           path: ./static/
