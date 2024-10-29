@@ -1,0 +1,54 @@
+name: vnt-FreeBSD测试
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '请填写构建vnts的vnt-dev/vnt分支或提交记录，默认主分支main'
+        required: true
+        default: 'main'
+  
+env:
+  CARGO_TERM_COLOR: always
+  BRANCH: "${{ github.event.inputs.tag }}"
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: vnt-dev/vnts
+          ref: ${{ env.BRANCH }} #默认使用main分支
+      #- name: fix
+        #run: |
+         #sed -i 's/const CLOCK_ID: ClockId = ClockId::CLOCK_BOOTTIME;/const CLOCK_ID: ClockId = ClockId::CLOCK_MONOTONIC;/g' ./lib/boringtun/src/sleepyinstant/unix.rs
+      - name: Set up FreeBSD
+        uses: cross-platform-actions/action@v0.23.0
+        with:
+          operating_system: freebsd
+          architecture: x86-64
+          version: '14.02'
+          shell: bash
+          memory: 5G
+          cpu_count: 4
+          run: |
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+              source $HOME/.cargo/env
+              export CARGO_TERM_COLOR=always
+              rustup set auto-self-update disable
+              rustup install 1.71
+              rustup default 1.71
+              export CC=clang
+              export CXX=clang++
+              
+              #export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
+              export RUSTFLAGS="-C opt-level=z -C target-cpu=native -C link-arg=-s"
+              cargo build --release --features ring-cipher,wss
+              file ./target/release/vnt-cli
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vnt-cli_FreeBSD
+          path: target/release/vnt-cli
