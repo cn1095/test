@@ -9,7 +9,6 @@ on:
         default: 'main'
   
 env:
-  CARGO_TERM_COLOR: always
   BRANCH: "${{ github.event.inputs.tag }}"
 jobs:
  build:
