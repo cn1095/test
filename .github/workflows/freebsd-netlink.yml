@@ -20,21 +20,21 @@ jobs:
         with:
           repository: rustp2p/NetLink
           ref: ${{ env.BRANCH }} #默认使用main分支
-      - uses: snickerbockers/submodules-init@master
+          submodules: 'recursive'
       - name: Build 
         run: |
+          git submodule update --remote
           cd web-app
           npm install
           npm run build
           cd ..
           mkdir -p ./static
           cp -r ./web-app/dist/* ./static/
-          ls ./static/
           cat ./static/api.js
           sudo apt-get update
           sudo apt-get install -y qemu qemu-user-static binfmt-support build-essential
           cargo install cross --git https://github.com/cross-rs/cross
-          cross build --target x86_64-unknown-freebsd --release --features
+          cross build --target x86_64-unknown-freebsd --release --features default
           mv ./target/release/net_link ./target/release/netlink
               
       - name: Upload artifact
