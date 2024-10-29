@@ -21,7 +21,7 @@ jobs:
           repository: rustp2p/NetLink
           ref: ${{ env.BRANCH }} #默认使用main分支
       - uses: snickerbockers/submodules-init@master
-      - name: Build web
+      - name: Build 
         run: |
           cd web-app
           npm install
@@ -30,32 +30,12 @@ jobs:
           mkdir -p ./static
           cp -r ./web-app/dist/* ./static/
           ls ./static/
-      - name: Set up FreeBSD
-        uses: cross-platform-actions/action@master
-        with:
-          operating_system: freebsd
-          architecture: x86-64
-          version: '14.0'
-          shell: bash
-          memory: 5G
-          cpu_count: 4
-          run: |
-              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-              source $HOME/.cargo/env
-              export CARGO_TERM_COLOR=always
-              #rustup set auto-self-update disable
-              #rustup install 1.71
-              #rustup default 1.71
-              export CC=clang
-              export CXX=clang++
-              
-              #export RUSTFLAGS='-C target-feature=+crt-static -C strip=symbols'
-              #export RUSTFLAGS="-C opt-level=z -C target-cpu=native -C link-arg=-s"
-              export RUSTFLAGS="-C strip=symbols -C link-dead-code"
-              cargo build --release --features default
-              file ./target/release/net_link
-              ./target/release/net_link -h
-              mv ./target/release/net_link ./target/release/netlink
+          cat ./static/api.js
+          sudo apt-get update
+          sudo apt-get install -y qemu qemu-user-static binfmt-support build-essential
+          cargo install cross --git https://github.com/cross-rs/cross
+          cross build --target x86_64-unknown-freebsd --release --features
+          mv ./target/release/net_link ./target/release/netlink
               
       - name: Upload artifact
         uses: actions/upload-artifact@v4
