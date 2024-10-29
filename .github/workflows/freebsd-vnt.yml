@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          repository: vnt-dev/vnts
+          repository: vnt-dev/vnt
           ref: ${{ env.BRANCH }} #默认使用main分支
       #- name: fix
         #run: |
