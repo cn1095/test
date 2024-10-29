@@ -24,7 +24,7 @@ jobs:
         #run: |
          #sed -i 's/const CLOCK_ID: ClockId = ClockId::CLOCK_BOOTTIME;/const CLOCK_ID: ClockId = ClockId::CLOCK_MONOTONIC;/g' ./lib/boringtun/src/sleepyinstant/unix.rs
       - name: Set up FreeBSD
-        uses: cross-platform-actions/action@v0.23.0
+        uses: cross-platform-actions/action@v0.25.0
         with:
           operating_system: freebsd
           architecture: x86-64
