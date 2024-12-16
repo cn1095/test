@@ -178,20 +178,20 @@ jobs:
           echo "$HOME/ndk/android-ndk-r21d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
           mkdir -p /opt/bin
           
-          cargo build --package vnt-cli --target aarch64-linux-android --release
+          cargo build --target aarch64-linux-android --release
           ls /opt/vnt/rust/target/aarch64-linux-android/release
           mv -f /opt/vnt/rust/target/aarch64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_aarch64.so
           
           cargo clean
-          cargo build --package vnt-cli --target armv7-linux-androideabi --release $FEATURES
+          cargo build --target armv7-linux-androideabi --release $FEATURES
           mv -f /opt/vnt/rust/target/armv7-linux-androideabi/release/*.so /opt/bin/rust_lib_vnt_app_armv7.so
           
           cargo clean
-          cargo build --package vnt-cli --target x86_64-linux-android --release $FEATURES
+          cargo build --target x86_64-linux-android --release $FEATURES
           mv -f /opt/vnt/rust/target/x86_64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_x86_64.so
           
           cargo clean
-          cargo build --package vnt-cli --target i686-linux-android --release $FEATURES
+          cargo build --target i686-linux-android --release $FEATURES
           mv -f /opt/vnt/rust/target/i686-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_i686.so
           
       - name: Install UPX
