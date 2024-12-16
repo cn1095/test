@@ -139,10 +139,10 @@ jobs:
       - name: 设置NDK环境
         if: ${{ env.target == 'Android.so' }}
         run: |
-          wget -q https://dl.google.com/android/repository/android-ndk-r21d-linux-x86_64.zip
-          unzip -q android-ndk-r21d-linux-x86_64.zip -d $HOME/ndk
-          echo "$HOME/ndk/android-ndk-r21d" >> $GITHUB_PATH  
-          echo "$HOME/ndk/android-ndk-r21d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 添加 NDK 路径到环境变量
+          wget -q https://dl.google.com/android/repository/android-ndk-r26d-linux-x86_64.zip
+          unzip -q android-ndk-r26d-linux-x86_64.zip -d /opt/ndk
+          echo "/opt/ndk/android-ndk-r26d" >> $GITHUB_PATH  
+          echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 添加 NDK 路径到环境变量
           
       - name: 添加编译平台
         if: ${{ env.target != 'Android.so' }}
@@ -174,8 +174,25 @@ jobs:
           git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
           #git clone -b v1.2.11 https://github.com/vnt-dev/vnt /opt/vnt
           cd /opt/vnt/rust
-          export PATH=$HOME/ndk/android-ndk-r21d:$PATH  
-          echo "$HOME/ndk/android-ndk-r21d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
+          export PATH=/opt/ndk/android-ndk-r26d:$PATH  
+          echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
+          cat >>~/.cargo/config <<EOF
+            [target.armv7-linux-androideabi]
+            ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ar"
+            linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
+
+            [target.aarch64-linux-android]
+            ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-ar"
+            linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang"
+
+            [target.i686-linux-android]
+            ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android-ar"
+            linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang"
+
+            [target.x86_64-linux-android]
+            ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ar"
+            linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang"
+            EOF
           mkdir -p /opt/bin
           
           cargo build --target aarch64-linux-android --release
