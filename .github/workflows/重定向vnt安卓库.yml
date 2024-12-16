@@ -199,18 +199,18 @@ jobs:
           mv -f /opt/vnt/rust/target/aarch64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_aarch64.so
           
           cargo clean
-          export CC_armv7_linux_androideabi="/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
-          export CC="/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
-          cargo build --target armv7-linux-androideabi --release 
-          mv -f /opt/vnt/rust/target/armv7-linux-androideabi/release/*.so /opt/bin/rust_lib_vnt_app_armv7.so
-          
-          cargo clean
           cargo build --target x86_64-linux-android --release
           mv -f /opt/vnt/rust/target/x86_64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_x86_64.so
           
           cargo clean
           cargo build --target i686-linux-android --release 
           mv -f /opt/vnt/rust/target/i686-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_i686.so
+
+          cargo clean
+          export CC_armv7_linux_androideabi="/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
+          export CC="/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
+          cargo build --target armv7-linux-androideabi --release 
+          mv -f /opt/vnt/rust/target/armv7-linux-androideabi/release/*.so /opt/bin/rust_lib_vnt_app_armv7.so
           
       - name: Install UPX
         if: github.event.inputs.target != 'Android.so'
