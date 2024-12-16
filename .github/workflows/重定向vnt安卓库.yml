@@ -194,20 +194,20 @@ jobs:
           EOF
           mkdir -p /opt/bin
           
-          RUSTFLAGS="-Zallow-dangling-references"  cargo build --target aarch64-linux-android --release
+          cargo build --target aarch64-linux-android --release
           ls /opt/vnt/rust/target/aarch64-linux-android/release
           mv -f /opt/vnt/rust/target/aarch64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_aarch64.so
           
           cargo clean
-          cargo build --target armv7-linux-androideabi --release $FEATURES
+          cargo build --target armv7-linux-androideabi --release 
           mv -f /opt/vnt/rust/target/armv7-linux-androideabi/release/*.so /opt/bin/rust_lib_vnt_app_armv7.so
           
           cargo clean
-          cargo build --target x86_64-linux-android --release $FEATURES
+          cargo build --target x86_64-linux-android --release
           mv -f /opt/vnt/rust/target/x86_64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_x86_64.so
           
           cargo clean
-          cargo build --target i686-linux-android --release $FEATURES
+          cargo build --target i686-linux-android --release 
           mv -f /opt/vnt/rust/target/i686-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_i686.so
           
       - name: Install UPX
