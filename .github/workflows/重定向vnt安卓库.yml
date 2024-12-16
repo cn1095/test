@@ -194,7 +194,7 @@ jobs:
           EOF
           mkdir -p /opt/bin
           
-          cargo build --target aarch64-linux-android --release
+          RUSTFLAGS="-Zallow-dangling-references"  cargo build --target aarch64-linux-android --release
           ls /opt/vnt/rust/target/aarch64-linux-android/release
           mv -f /opt/vnt/rust/target/aarch64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_aarch64.so
           
