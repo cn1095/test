@@ -161,7 +161,8 @@ jobs:
       - name: 开始编译
         if: ${{ env.target != 'Android.so' }}
         run: |
-          git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
+          #git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
+          git clone https://github.com/cn1095/VntApp /opt/vnt
           cd /opt/vnt
           [[ -n $feature ]] && echo "当前${TARGET}架构添加的模块有 ${feature}" && FEATURES="--features ${feature}"
           cargo build --package vnt-cli --release --target $TARGET $FEATURES
