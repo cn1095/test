@@ -171,7 +171,12 @@ jobs:
       - name: 编译安卓库
         if: ${{ env.target == 'Android.so' }}
         run: |
-          cat >>~/.cargo/config <<EOF
+          git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
+          #git clone -b v1.2.11 https://github.com/vnt-dev/vnt /opt/vnt
+          cd /opt/vnt/rust
+          export PATH=/opt/ndk/android-ndk-r26d:$PATH  
+          echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
+           cat >>~/.cargo/config <<EOF
             [target.armv7-linux-androideabi]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ar"
             linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
@@ -187,14 +192,7 @@ jobs:
             [target.x86_64-linux-android]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ar"
             linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang"
-            
             EOF
-          git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
-          #git clone -b v1.2.11 https://github.com/vnt-dev/vnt /opt/vnt
-          cd /opt/vnt/rust
-          export PATH=/opt/ndk/android-ndk-r26d:$PATH  
-          echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
-          
           mkdir -p /opt/bin
           
           cargo build --target aarch64-linux-android --release
