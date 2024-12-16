@@ -143,7 +143,7 @@ jobs:
           unzip -q android-ndk-r26d-linux.zip -d /opt/ndk
           echo "/opt/ndk/android-ndk-r26d" >> $GITHUB_PATH  
           echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 添加 NDK 路径到环境变量
-          
+          ls /opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin
       - name: 添加编译平台
         if: ${{ env.target != 'Android.so' }}
         run: rustup target add $TARGET
