@@ -84,7 +84,7 @@ jobs:
            cargo build --target armv7-linux-androideabi --release 
            mv -f /opt/vnt/rust/target/armv7-linux-androideabi/release/*.so /opt/vnt/android/app/src/main/jniLibs/armeabi-v7a/librust_lib_vnt_app.so
 
-      - name: 构建安卓so库
+      - name: 构建安卓APK
         run: |
          cd /opt/vnt
          cp -rf ./windows/dlls/amd64 ./windows/dlls/x86
@@ -92,7 +92,7 @@ jobs:
          flutter build apk 
          find /opt/vnt -type f -name "*.apk"
          du -ah /opt/vnt/build
-      - name: 签名
+      - name: 签名APK
         run: |
          mkdir -p /opt/jks
          cd /opt/jks
