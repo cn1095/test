@@ -89,7 +89,7 @@ jobs:
       - name: 构建安卓APK
         run: |
          cd /opt/vnt
-         cp -rf ./windows/dlls/amd64 ./windows/dlls/x86
+         #cp -rf ./windows/dlls/amd64 ./windows/dlls/x86
          flutter pub get
          flutter build apk 
          find /opt/vnt -type f -name "*.apk"
