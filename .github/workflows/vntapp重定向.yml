@@ -24,8 +24,8 @@ jobs:
         run: |
            wget -q https://dl.google.com/android/repository/android-ndk-r26d-linux.zip
            unzip -q android-ndk-r26d-linux.zip -d /opt/ndk
-           echo "/opt/ndk/android-ndk-r26d" >> $GITHUB_PATH  
-           echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
+           #echo "/opt/ndk/android-ndk-r26d" >> $GITHUB_PATH  
+           #echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
           
       - name: 设置Flutter环境
         uses: subosito/flutter-action@v2
@@ -47,7 +47,7 @@ jobs:
            cd /opt/vnt/rust
            rm -rf .cargo/config
            export PATH=/opt/ndk/android-ndk-r26d:/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH  
-           echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH 
+           #echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH 
            cat >>./.cargo/config <<EOF
             [target.armv7-linux-androideabi]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
@@ -91,7 +91,7 @@ jobs:
          cd /opt/vnt
          #cp -rf ./windows/dlls/amd64 ./windows/dlls/x86
          flutter pub get
-         flutter build apk 
+         flutter build apk --release
          find /opt/vnt -type f -name "*.apk"
          du -ah /opt/vnt/build
       - name: 签名APK
