@@ -192,7 +192,7 @@ jobs:
             [target.x86_64-linux-android]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ar"
             linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang"
-            EOF
+          EOF
           mkdir -p /opt/bin
           
           cargo build --target aarch64-linux-android --release
