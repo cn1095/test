@@ -180,18 +180,22 @@ jobs:
             [target.armv7-linux-androideabi]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
             linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
+            cc = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang"
 
             [target.aarch64-linux-android]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
             linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang"
+            cc = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang"
 
             [target.i686-linux-android]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
             linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang"
+            cc = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang"
 
             [target.x86_64-linux-android]
             ar = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
             linker = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang"
+            cc = "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android21-clang"
           EOF
           mkdir -p /opt/bin
           RUSTFLAGS="-C linker=/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" \
