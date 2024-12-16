@@ -161,8 +161,7 @@ jobs:
       - name: 开始编译
         if: ${{ env.target != 'Android.so' }}
         run: |
-          #git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
-          git clone -b master https://github.com/cn1095/VntApp /opt/vnt
+          git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
           cd /opt/vnt
           [[ -n $feature ]] && echo "当前${TARGET}架构添加的模块有 ${feature}" && FEATURES="--features ${feature}"
           cargo build --package vnt-cli --release --target $TARGET $FEATURES
@@ -173,7 +172,6 @@ jobs:
         if: ${{ env.target == 'Android.so' }}
         run: |
           git clone -b ${{ env.branch }} https://github.com/cn1095/VntApp /opt/vnt
-          #git clone -b v1.2.11 https://github.com/vnt-dev/vnt /opt/vnt
           cd /opt/vnt/rust
           export PATH=/opt/ndk/android-ndk-r26d:$PATH  
           echo "/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
