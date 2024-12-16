@@ -171,7 +171,8 @@ jobs:
       - name: 编译安卓库
         if: ${{ env.target == 'Android.so' }}
         run: |
-          git clone -b ${{ env.branch }} https://github.com/cn1095/vnt /opt/vnt
+          #git clone -b ${{ env.branch }} https://github.com/cn1095/vnt /opt/vnt
+          git clone -b v1.2.11 https://github.com/vnt-dev/vnt /opt/vnt
           cd /opt/vnt
           export PATH=$HOME/ndk/android-ndk-r21d:$PATH  
           echo "$HOME/ndk/android-ndk-r21d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
