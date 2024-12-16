@@ -6,7 +6,7 @@ on:
       branch:
         description: '编译vnt-cli的分支或版本号，默认Location分支'
         required: true
-        default: 'Android'
+        default: 'Location'
       target:
         description: '请选择目标CPU架构'
         required: true
@@ -173,18 +173,27 @@ jobs:
         run: |
           git clone -b ${{ env.branch }} https://github.com/cn1095/vnt /opt/vnt
           #git clone -b v1.2.11 https://github.com/vnt-dev/vnt /opt/vnt
-          cd /opt/vnt
+          cd /opt/vnt/rust
           export PATH=$HOME/ndk/android-ndk-r21d:$PATH  
           echo "$HOME/ndk/android-ndk-r21d/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH # 确保 NDK 在 PATH 中
           mkdir -p /opt/bin
           [[ -n $feature ]] && echo "当前${TARGET}架构添加的模块有 ${feature}" && FEATURES="--features ${feature}"
-          #cargo install cargo-ndk
-          #cargo ndk -t arm64-v8a armeabi-v7a x86 x86_64 -o /opt/bin --release $FEATURES
+          
           cargo build --package vnt-cli --target aarch64-linux-android --release $FEATURES
-          ls /opt/vnt/target/aarch64-linux-android/release
+          ls /opt/vnt/rust/target/aarch64-linux-android/release
+          mv -f /opt/vnt/rust/target/aarch64-linux-android/release/*.so /opt/bin/*
+          
+          cargo clean
           cargo build --package vnt-cli --target armv7-linux-androideabi --release $FEATURES
+          mv -f /opt/vnt/rust/target/armv7-linux-androideabi/release/*.so /opt/bin/*
+          
+          cargo clean
           cargo build --package vnt-cli --target x86_64-linux-android --release $FEATURES
+          mv -f /opt/vnt/rust/target/x86_64-linux-android/release/*.so /opt/bin/*
+          
+          cargo clean
           cargo build --package vnt-cli --target i686-linux-android --release $FEATURES
+          mv -f /opt/vnt/rust/target/i686-linux-android/release/*.so /opt/bin/*
           
       - name: Install UPX
         if: github.event.inputs.target != 'Android.so'
@@ -204,4 +213,4 @@ jobs:
         if: always()
         with:
           name: ${{ env.NAME }}
-          path: /opt/bin/*
+          path: /opt/bin/
