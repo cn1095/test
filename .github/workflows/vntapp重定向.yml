@@ -8,6 +8,8 @@ on:
         required: false
         default: 'password'
 env:
+  CARGO_TERM_COLOR: always
+  TZ: Asia/Shanghai
   password: "${{ github.event.inputs.password }}"
 jobs:
   build:
