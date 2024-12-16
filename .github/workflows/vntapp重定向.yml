@@ -1,0 +1,47 @@
+name: vntapp重定向
+
+on:
+   workflow_dispatch:
+    inputs:
+      password:
+        description: '请输入签名证书密码：（不支持中文密码，且最少6位字符）'
+        required: false
+        default: 'password'
+env:
+  password: "${{ github.event.inputs.password }}"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 设置JDK环境
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Install Flutter
+        uses: subosito/flutter-action@v4
+        with:
+         channel: stable  # 使用最新的 Flutter 版本
+      - name: Build APK
+        run: |
+         git clone -b Location https://github.com/cn1095/VntApp /opt/vnt
+         cd /opt/vnt
+         cp -rf ./windows/dlls/amd64 ./windows/dlls/x86
+         flutter pub get
+         flutter build apk 
+         find /opt/vnt -type f -name "*.apk"
+         du -ah /opt/vnt/build
+      - name: 签名
+        run: |
+         mkdir -p /opt/jks
+         cd /opt/jks
+         #生成签名文件keystore.jks
+         keytool -genkey -v -keystore keystore.jks -storepass $password -alias key -keypass $password -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android, OU=Android, O=Android, L=BeiJing, ST=BeiJing, C=CN"
+         
+        
+         du -k /opt/jks/*
+      - name : 上传
+        uses: actions/upload-artifact@master
+        if: always()
+        with:
+         name: vntAPP
+         path: /opt/vntAPP/*
