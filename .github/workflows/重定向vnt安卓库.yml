@@ -163,14 +163,15 @@ jobs:
           mkdir -p /opt/bin
           [[ -n $feature ]] && echo "当前${TARGET}架构添加的模块有 ${feature}" && FEATURES="--features ${feature}"
           cargo install cargo-ndk
-          cargo ndk -p vnt-cli -t arm64-v8a armeabi-v7a x86 x86_64 -o /opt/bin --release $FEATURES
+          cargo ndk --package vnt-cli -t arm64-v8a armeabi-v7a x86 x86_64 -o /opt/bin --release $FEATURES
       - name: Install UPX
+        if: github.event.inputs.target != 'Android.so'
         uses: crazy-max/ghaction-upx@v3
         with:
           version: latest
           install-only: true
       - name: 打包压缩
-        if: github.event.inputs.upx == 'true'
+        if: github.event.inputs.upx == 'true' && github.event.inputs.target != 'Android.so'
         run: |
           cd /opt/bin
           ls -alh vnt-cli
