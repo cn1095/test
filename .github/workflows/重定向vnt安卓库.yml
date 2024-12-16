@@ -203,7 +203,7 @@ jobs:
           mv -f /opt/vnt/rust/target/x86_64-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_x86_64.so
           
           cargo clean
-          export CC_i686-linux-android="/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang"
+          export CC_i686_linux_android="/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang"
           export CC="/opt/ndk/android-ndk-r26d/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang"
           cargo build --target i686-linux-android --release 
           mv -f /opt/vnt/rust/target/i686-linux-android/release/*.so /opt/bin/rust_lib_vnt_app_i686.so
