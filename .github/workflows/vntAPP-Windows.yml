@@ -1,0 +1,36 @@
+name: vntapp-Windows重定向
+
+on:
+   workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: windows-latest # 使用 Windows 机器运行任务
+    steps:   
+      - name: 设置Flutter环境
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable  
+          
+      - name: 克隆源码
+        run: git clone -b Location https://github.com/cn1095/VntApp C:\vnt
+
+      - name: 安装依赖并构建 Windows
+        run: |
+          cd C:\vnt
+          flutter pub get
+          flutter upgrade
+          flutter build windows --release
+          echo "构建完成，开始列出生成的文件"
+          dir C:\vnt\build\windows\runner\Release
+          
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: vntAPP
+          path: C:\vnt\build\windows\runner\Release\*
