@@ -1,4 +1,4 @@
-name: vntapp-Windows重定向
+name: vntapp-Windows
 
 on:
    workflow_dispatch:
