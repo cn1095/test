@@ -28,7 +28,7 @@ jobs:
           channel: stable  
           
       - name: 克隆源码
-        run: git clone -b $tag https://github.com/${repo} C:\vnt
+        run: git clone -b "$tag" "https://github.com/${repo}" C:\vnt
 
       - name: 构建 Windows vntAPP
         run: |
