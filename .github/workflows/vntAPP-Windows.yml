@@ -26,11 +26,12 @@ jobs:
           flutter upgrade
           flutter build windows --release
           echo "构建完成，开始列出生成的文件"
-          dir C:\vnt\build\windows\runner\Release
+          dir C:\vnt\build\windows
+          dir C:\vnt\build\windows\x64\runner\Release
           
       - name: 上传构建产物
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: vntAPP
-          path: C:\vnt\build\windows\runner\Release\*
+          path: C:\vnt\build\windows\x64\runner\Release\*
