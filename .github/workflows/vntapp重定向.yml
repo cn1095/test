@@ -89,6 +89,7 @@ jobs:
          cd /opt/vnt
          #cp -rf ./windows/dlls/amd64 ./windows/dlls/x86
          flutter pub get
+         flutter upgrade
          flutter build apk --release
          find /opt/vnt -type f -name "*.apk"
          du -ah /opt/vnt/build
