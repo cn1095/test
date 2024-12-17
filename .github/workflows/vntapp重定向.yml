@@ -1,4 +1,4 @@
-name: vntapp重定向
+name: vntapp-Android
 
 on:
    workflow_dispatch:
@@ -8,14 +8,24 @@ on:
         required: false
         default: 'password'
       so:
-        description: '重新打包so'
+        description: '是否重新打包安卓.so'
         required: true
         default: false
         type: boolean
+      repo:
+        description: '请输入vntAPP源码仓库'
+        required: false
+        default: 'vnt-dev/VntApp'
+      tag:
+        description: '请输入仓库分支或版本号'
+        required: false
+        default: 'master'
 env:
   CARGO_TERM_COLOR: always
   TZ: Asia/Shanghai
   password: "${{ github.event.inputs.password }}"
+  repo: "${{ github.event.inputs.repo }}"
+  tag: "${{ github.event.inputs.tag }}"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,7 +56,7 @@ jobs:
            rustup target add i686-linux-android
          
       - name: 克隆源码
-        run: git clone -b Location https://github.com/cn1095/VntApp /opt/vnt
+        run: git clone -b $tag https://github.com/${repo} /opt/vnt
            
       - name: 构建安卓so库
         if: github.event.inputs.so == 'true'
