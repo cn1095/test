@@ -33,5 +33,5 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: vntAPP
+          name: vntAPP-Windows
           path: C:\vnt\build\windows\x64\runner\Release\*
