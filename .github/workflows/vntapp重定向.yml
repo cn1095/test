@@ -16,9 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 设置JDK环境
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
-          java-version: 18
+          distribution: 'zulu'
+          java-version: 17
           
       #- name: 设置NDK环境
         #run: |
