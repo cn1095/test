@@ -40,22 +40,6 @@ jobs:
          
       - name: 克隆源码
         run: git clone -b Location https://github.com/cn1095/VntApp /opt/vnt
-
-      - name: 构建Windows
-        run: |
-           cd /opt/vnt
-           flutter pub get
-           flutter upgrade
-           flutter build windows --release 
-           find /opt/vnt -type f -name "*.exe"
-           ls /opt/vnt/build
-           /opt/vnt/build/app/outputs
-      - name : 上传
-        uses: actions/upload-artifact@master
-        if: always()
-        with:
-         name: vntAPP
-         path: /opt/vnt/build/app/outputs/*
            
       #- name: 构建安卓so库
         #run: |
@@ -126,9 +110,3 @@ jobs:
         with:
          name: vntAPP
          path: /opt/vntAPP/*
-
-      - name: 构建Windows
-        run: |
-           flutter build windows --release 
-           find /opt/vnt -type f -name "*.exe"
-           ls /opt/vnt/build
