@@ -59,7 +59,7 @@ jobs:
           - GOARCH: amd64
             GOOS: freebsd
             NAME: freebsd-x86
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       GOarch: ${{ matrix.GOARCH }}
       GOos: ${{ matrix.GOOS }}
