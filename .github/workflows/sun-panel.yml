@@ -111,7 +111,7 @@ jobs:
           pnpm run build
           echo '构建前端数据完成'
           ls ./dist
-          cp -r ./dist/* ./service/assets/*
+          cp -r ./dist/* ./service/assets/
       - name: 开始编译
         run: |
             sudo timedatectl set-timezone "Asia/Shanghai"
