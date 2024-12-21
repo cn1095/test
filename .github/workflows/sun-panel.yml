@@ -56,10 +56,10 @@ jobs:
             GOOS: linux
             NAME: linux-mips64le
             MUSL: mips64el-linux-musl
-          - GOARCH: ppc64le
-            GOOS: linux
-            NAME: linux-ppc64le
-            MUSL: powerpc64-linux-musl
+          #- GOARCH: ppc64le
+            #GOOS: linux
+            #NAME: linux-ppc64le
+            #MUSL: powerpc64-linux-musl
           - GOARCH: s390x
             GOOS: linux
             NAME: linux-s390x
