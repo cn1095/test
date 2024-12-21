@@ -111,11 +111,7 @@ jobs:
           pnpm run build
           echo '构建前端数据完成'
           ls ./dist
-      - name: 上传静态页面
-        uses: actions/upload-artifact@v4
-        with:
-          name: sun-panel-静态页面_${{ matrix.NAME }}
-          path: ./dist/*
+          cp -r ./dist/* ./service/assets/*
       - name: 开始编译
         run: |
             sudo timedatectl set-timezone "Asia/Shanghai"
