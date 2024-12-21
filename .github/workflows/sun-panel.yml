@@ -18,47 +18,59 @@ jobs:
           - GOARCH: arm64
             GOOS: linux
             NAME: linux-aarch64
+            MUSL: aarch64-linux-musl
           - GOARCH: arm
             GOARM: 7
             GOOS: linux
             NAME: linux-arm7
+            MUSL: armv7m-linux-musleabi
           - GOARCH: arm
             GOARM: 6
             NAME: linux-arm6
             GOOS: linux
+            MUSL: armv6-linux-musleabi  
           - GOARCH: arm
             GOARM: 5
             GOOS: linux
             NAME: linux-arm5
+            MUSL: armv5l-linux-musleabi
           - GOARCH: arm
             GOOS: linux
             NAME: linux-arm
+            MUSL: armv-linux-musleabi
           - GOARCH: mipsle
             GOMIPS: softfloat
             GOOS: linux
             NAME: linux-mipsel
+            MUSL: mipsel-linux-muslsf
           - GOARCH: mips
             GOMIPS: softfloat
             GOOS: linux
             NAME: linux-mips
+            MUSL: mips-linux-muslsf
           - GOARCH: mips64
             GOOS: linux
             NAME: linux-mips64
+            MUSL: mips64-linux-musl
           - GOARCH: mips64le
             GOOS: linux
             NAME: linux-mips64le
+            MUSL: mips64el-linux-musl
           - GOARCH: ppc64le
             GOOS: linux
             NAME: linux-ppc64le
+            MUSL: powerpc64-linux-musl
           - GOARCH: s390x
             GOOS: linux
             NAME: linux-s390x
+            MUSL: s390x-linux-musl 
           - GOARCH: amd64
             GOOS: linux
             NAME: linux-x86
-          - GOARCH: amd64
-            GOOS: freebsd
-            NAME: freebsd-x86
+            MUSL: x86_64-linux-musl 
+          #- GOARCH: amd64
+            #GOOS: freebsd
+            #NAME: freebsd-x86
     runs-on: ubuntu-20.04
     env:
       GOarch: ${{ matrix.GOARCH }}
@@ -66,6 +78,7 @@ jobs:
       GOarm: ${{ matrix.GOARM }}
       GOmips: ${{ matrix.GOMIPS }}
       NAME: ${{ matrix.NAME }}
+      MUSL: ${{ matrix.MUSL }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -88,7 +101,7 @@ jobs:
           go-version: ${{ env.gotag }}
       - uses: lmq8267/dl-musl@main
         with:
-          target: mipsel-linux-muslsf
+          target: ${{ matrix.MUSL }}
           static: true
           gccpath: /tmp
       - name: 打包静态页面
@@ -102,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sun-panel-静态页面
-          path: ./dist
+          path: ./dist/*
       - name: 开始编译
         run: |
             sudo timedatectl set-timezone "Asia/Shanghai"
