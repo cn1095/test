@@ -42,8 +42,8 @@ jobs:
         run: |
           #pnpm -r install
           #pnpm -r build
-          npm install
-          npm run build
+          pnpm install
+          pnpm build
           ls -alh
       - name: 上传
         uses: actions/upload-artifact@v4
