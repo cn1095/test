@@ -42,6 +42,7 @@ jobs:
         run: |
           #pnpm -r install
           #pnpm -r build
+          sed -i '/define: {/i base: "\/tools-web\/",' vite.config.ts
           pnpm install
           pnpm build
           ls -alh
